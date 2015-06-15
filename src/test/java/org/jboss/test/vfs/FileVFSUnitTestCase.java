@@ -28,7 +28,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -1010,62 +1009,6 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
                 } catch (Exception ignore) {
                 }
             }
-        } finally {
-            VFSUtils.safeClose(mounts);
-        }
-    }
-
-    /**
-     * Test that the outermf.jar manifest classpath is parsed
-     * correctly.
-     *
-     * @throws Exception
-     */
-    public void testManifestClasspath() throws Exception {
-        VirtualFile testdir = getVirtualFile("/vfs/test");
-        VirtualFile outerjar = testdir.getChild("outermf.jar");
-        List<Closeable> mounts = recursiveMount(outerjar);
-        try {
-
-            assertNotNull("outermf.jar != null", outerjar);
-
-            ArrayList<VirtualFile> cp = new ArrayList<VirtualFile>();
-            VFSUtils.addManifestLocations(outerjar, cp);
-            // The p0.jar should be found in the classpath
-            assertEquals("cp size 2", 2, cp.size());
-            assertEquals("jar1.jar == cp[0]", "jar1.jar", cp.get(0).getName());
-            assertEquals("jar2.jar == cp[1]", "jar2.jar", cp.get(1).getName());
-        } finally {
-            VFSUtils.safeClose(mounts);
-        }
-    }
-
-    /**
-     * Test that an inner-inner jar that is extracted does not blowup
-     * the addManifestLocations routine.
-     *
-     * @throws Exception
-     */
-    public void testInnerManifestClasspath() throws Exception {
-        VirtualFile testdir = getVirtualFile("/vfs/test");
-        VirtualFile outerjar = testdir.getChild("withalong/rootprefix/outermf.jar");
-        assertNotNull(outerjar);
-        List<Closeable> mounts = recursiveMount(outerjar);
-        try {
-            VirtualFile jar1 = outerjar.getChild("jar1.jar");
-            assertNotNull(jar1);
-            VirtualFile jar2 = outerjar.getChild("jar2.jar");
-            assertNotNull(jar2);
-            VirtualFile innerjar = outerjar.getChild("innermf.jar");
-            assertNotNull("innermf.jar != null", innerjar);
-
-            ArrayList<VirtualFile> cp = new ArrayList<VirtualFile>();
-            VFSUtils.addManifestLocations(innerjar, cp);
-            assertEquals(2, cp.size());
-            VirtualFile cp0 = cp.get(0);
-            assertEquals(jar1, cp0);
-            VirtualFile cp1 = cp.get(1);
-            assertEquals(jar2, cp1);
         } finally {
             VFSUtils.safeClose(mounts);
         }

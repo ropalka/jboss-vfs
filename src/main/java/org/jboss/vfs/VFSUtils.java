@@ -44,8 +44,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -59,8 +57,6 @@ import org.jboss.vfs.protocol.VirtualFileURLStreamHandler;
 import org.jboss.vfs.spi.MountHandle;
 import org.jboss.vfs.util.PaddedManifestStream;
 import org.jboss.vfs.util.PathTokenizer;
-import org.jboss.vfs.util.automount.Automounter;
-
 
 /**
  * VFS Utilities
@@ -145,64 +141,6 @@ public class VFSUtils {
             buffer.append("<empty>");
         }
         return buffer.toString();
-    }
-
-    /**
-     * Add manifest paths
-     *
-     * @param file  the file
-     * @param paths the paths to add to
-     * @throws IOException              if there is an error reading the manifest or the virtual file is closed
-     * @throws IllegalStateException    if the file has no parent
-     * @throws IllegalArgumentException for a null file or paths
-     */
-    public static void addManifestLocations(VirtualFile file, List<VirtualFile> paths) throws IOException {
-        if (file == null) {
-            throw MESSAGES.nullArgument("file");
-        }
-        if (paths == null) {
-            throw MESSAGES.nullArgument("paths");
-        }
-        boolean trace = VFSLogger.ROOT_LOGGER.isTraceEnabled();
-        Manifest manifest = getManifest(file);
-        if (manifest == null) { return; }
-        Attributes mainAttributes = manifest.getMainAttributes();
-        String classPath = mainAttributes.getValue(Attributes.Name.CLASS_PATH);
-        if (classPath == null) {
-            if (trace) {
-                VFSLogger.ROOT_LOGGER.tracef("Manifest has no Class-Path for %s", file.getPathName());
-            }
-            return;
-        }
-        VirtualFile parent = file.getParent();
-        if (parent == null) {
-            VFSLogger.ROOT_LOGGER.debugf("%s has no parent.", file);
-            return;
-        }
-        if (trace) {
-            VFSLogger.ROOT_LOGGER.tracef("Parsing Class-Path: %s for %s parent=%s", classPath, file.getName(), parent.getName());
-        }
-        StringTokenizer tokenizer = new StringTokenizer(classPath);
-        while (tokenizer.hasMoreTokens()) {
-            String path = tokenizer.nextToken();
-            try {
-                VirtualFile vf = parent.getChild(path);
-                if (vf.exists()) {
-                    if (paths.contains(vf) == false) {
-                        paths.add(vf);
-                        // Recursively process the jar
-                        Automounter.mount(file, vf);
-                        addManifestLocations(vf, paths);
-                    } else if (trace) {
-                        VFSLogger.ROOT_LOGGER.tracef("%s from manifest is already in the classpath %s", vf.getName(), paths);
-                    }
-                } else if (trace) {
-                    VFSLogger.ROOT_LOGGER.trace("Unable to find " + path + " from " + parent.getName());
-                }
-            } catch (IOException e) {
-                VFSLogger.ROOT_LOGGER.debugf("Manifest Class-Path entry %s ignored for %s reason= %s", path, file.getPathName(), e);
-            }
-        }
     }
 
     /**
