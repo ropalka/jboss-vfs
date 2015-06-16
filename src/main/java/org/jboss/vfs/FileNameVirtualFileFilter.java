@@ -16,23 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
-
 /**
  * Exclude virtual file by file name and path.
  *
  * @author ales.justin@jboss.org
  */
-public class FileNameVirtualFileFilter implements VirtualFileFilter {
+class FileNameVirtualFileFilter implements VirtualFileFilter {
     private Map<String, Set<String>> excludes;
 
     public FileNameVirtualFileFilter(Map<String, Set<String>> excludes) {

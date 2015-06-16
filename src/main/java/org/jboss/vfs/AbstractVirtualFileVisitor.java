@@ -15,10 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.util;
-
-import org.jboss.vfs.VirtualFileVisitor;
-import org.jboss.vfs.VisitorAttributes;
+package org.jboss.vfs;
 
 /**
  * AbstractVirtualFileVisitor.
@@ -26,7 +23,7 @@ import org.jboss.vfs.VisitorAttributes;
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @version $Revision: 1.1 $
  */
-public abstract class AbstractVirtualFileVisitor implements VirtualFileVisitor {
+abstract class AbstractVirtualFileVisitor implements VirtualFileVisitor {
 
     /**
      * The attributes

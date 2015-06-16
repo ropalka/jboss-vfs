@@ -16,23 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
-
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
-import org.jboss.vfs.VisitorAttributes;
 
 /**
  * Include/exclude visitor attributes.
  *
  * @author <a href="mailto:ales.justin@jboss.com">Ales Justin</a>
  */
-public class IncludeExcludeVisitorAttributes extends VisitorAttributes implements VirtualFileFilter {
+class IncludeExcludeVisitorAttributes extends VisitorAttributes implements VirtualFileFilter {
 
     private Set<String> includes;
     private Set<String> excludes;

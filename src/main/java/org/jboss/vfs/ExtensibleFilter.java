@@ -15,16 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
 
 /**
  * An extensible filter for VFS files.  Three arrays are maintained for checking: a prefix, suffix, and match array.  If
@@ -37,7 +34,7 @@ import org.jboss.vfs.VirtualFileFilter;
  * @author Scott.Stark@jboss.org
  * @version $Revision: 57108 $
  */
-public class ExtensibleFilter implements VirtualFileFilter {
+class ExtensibleFilter implements VirtualFileFilter {
 
     /**
      * Compare the strings backwards.  This assists in suffix comparisons.

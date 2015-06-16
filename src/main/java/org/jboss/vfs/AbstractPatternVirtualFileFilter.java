@@ -16,21 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.util.regex.Pattern;
-
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
 
 /**
  * Regexp patter filter.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractPatternVirtualFileFilter implements VirtualFileFilter {
+abstract class AbstractPatternVirtualFileFilter implements VirtualFileFilter {
     private Pattern pattern;
 
     public AbstractPatternVirtualFileFilter(String regexp) {

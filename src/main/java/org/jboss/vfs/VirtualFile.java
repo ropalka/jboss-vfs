@@ -33,9 +33,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jboss.vfs.util.FilterVirtualFileVisitor;
-import org.jboss.vfs.util.PathTokenizer;
-
 /**
  * A virtual file.  This is a symbolic reference to a location in the virtual file system hierarchy.  Holding a {@code
  * VirtualFile} instance gives no guarantees as to the presence or immutability of the referenced file or any of its

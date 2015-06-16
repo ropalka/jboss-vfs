@@ -40,8 +40,6 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.jboss.vfs.util.PathTokenizer;
-
 /**
  * {@inheritDoc}
  * <p/>

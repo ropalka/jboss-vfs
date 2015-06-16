@@ -15,14 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jboss.vfs.VFSMessages;
 
 /**
  * PathTokenizer.
@@ -33,7 +31,7 @@ import org.jboss.vfs.VFSMessages;
  * @version $Revision: 1.1 $
  */
 @SuppressWarnings({"StringEquality"})
-public class PathTokenizer {
+class PathTokenizer {
 
     /**
      * The reverse path const

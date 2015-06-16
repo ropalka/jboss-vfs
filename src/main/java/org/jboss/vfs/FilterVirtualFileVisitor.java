@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
@@ -23,18 +23,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
-import org.jboss.vfs.VirtualFileFilterWithAttributes;
-import org.jboss.vfs.VisitorAttributes;
-
 /**
  * A visitor based on a virtual file filter
  *
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @version $Revision: 1.1 $
  */
-public class FilterVirtualFileVisitor extends AbstractVirtualFileVisitor {
+class FilterVirtualFileVisitor extends AbstractVirtualFileVisitor {
 
     /**
      * The filter

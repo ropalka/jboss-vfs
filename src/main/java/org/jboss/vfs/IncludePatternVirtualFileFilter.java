@@ -16,21 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
-
-import org.jboss.vfs.VirtualFile;
+package org.jboss.vfs;
 
 /**
- * Include file name filter.
+ * Include pattern filter.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class IncludeFileNameVirtualFileFilter extends IncludePatternVirtualFileFilter {
-    public IncludeFileNameVirtualFileFilter(String regexp) {
+abstract class IncludePatternVirtualFileFilter extends AbstractPatternVirtualFileFilter {
+    public IncludePatternVirtualFileFilter(String regexp) {
         super(regexp);
     }
 
-    protected String getMatchString(VirtualFile file) {
-        return file.getName();
+    protected boolean doMatch() {
+        return true;
     }
 }

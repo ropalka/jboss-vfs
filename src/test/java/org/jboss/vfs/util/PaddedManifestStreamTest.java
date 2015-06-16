@@ -21,6 +21,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import org.jboss.vfs.PaddedManifestStream;
 import org.jboss.vfs.VFS;
 
 import org.jboss.vfs.VFSUtils;

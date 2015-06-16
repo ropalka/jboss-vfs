@@ -31,8 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
-import org.jboss.vfs.util.PathTokenizer;
-
 /**
  * Assembly of VirtualFiles that can be mounted into the VFS in a structure
  * that is not required to match a real filesystem structure.

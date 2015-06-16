@@ -15,17 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VisitorAttributes;
 
 /**
  * Matches a file name against a list of suffixes.

@@ -15,10 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
   */
-package org.jboss.vfs.util;
-
-import org.jboss.vfs.VirtualFileFilterWithAttributes;
-import org.jboss.vfs.VisitorAttributes;
+package org.jboss.vfs;
 
 /**
  * AbstractVirtualFileFilterWithAttributes
@@ -26,7 +23,7 @@ import org.jboss.vfs.VisitorAttributes;
  * @author adrian@jboss.org
  * @version $Revision: 44223 $
  */
-public abstract class AbstractVirtualFileFilterWithAttributes implements VirtualFileFilterWithAttributes {
+abstract class AbstractVirtualFileFilterWithAttributes implements VirtualFileFilterWithAttributes {
 
     /**
      * The attributes

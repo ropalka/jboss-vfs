@@ -15,14 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
   */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.util.Collection;
-
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
 
 /**
  * Filters out a set of suffixes
@@ -30,7 +27,7 @@ import org.jboss.vfs.VirtualFileFilter;
  * @author adrian@jboss.org
  * @version $Revision: 44223 $
  */
-public class SuffixesExcludeFilter implements VirtualFileFilter {
+class SuffixesExcludeFilter implements VirtualFileFilter {
 
     /**
      * The suffixes
