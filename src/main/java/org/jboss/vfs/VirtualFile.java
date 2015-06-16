@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jboss.vfs.util.FilterVirtualFileVisitor;
-import org.jboss.vfs.util.MatchAllVirtualFileFilter;
 import org.jboss.vfs.util.PathTokenizer;
 
 /**

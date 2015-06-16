@@ -15,10 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.util;
-
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
+package org.jboss.vfs;
 
 /**
  * MatchAllVirtualFileFilter.
@@ -26,7 +23,7 @@ import org.jboss.vfs.VirtualFileFilter;
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @version $Revision: 1.1 $
  */
-public class MatchAllVirtualFileFilter implements VirtualFileFilter {
+class MatchAllVirtualFileFilter implements VirtualFileFilter {
 
     /**
      * The instance
