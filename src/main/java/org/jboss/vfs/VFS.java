@@ -526,19 +526,6 @@ public class VFS {
         return mountZipExpanded(zipFile.openStream(), zipFile.getName(), mountPoint, tempFileProvider);
     }
 
-    /**
-     * Create and mount an assembly file system, returning a single handle which will unmount and
-     * close the filesystem when closed.
-     *
-     * @param assembly   an {@link VirtualFileAssembly} to mount in the VFS
-     * @param mountPoint the point at which the filesystem should be mounted
-     * @return a handle
-     * @throws IOException if an error occurs
-     */
-    public static Closeable mountAssembly(VirtualFileAssembly assembly, VirtualFile mountPoint) throws IOException {
-        return doMount(new AssemblyFileSystem(assembly), mountPoint);
-    }
-
     @SuppressWarnings({"unchecked"})
     private static <E> Set<E> emptyRemovableSet() {
         return EMPTY_REMOVABLE_SET;
