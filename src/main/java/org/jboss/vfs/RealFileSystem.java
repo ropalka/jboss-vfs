@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import static java.security.AccessController.doPrivileged;
 
@@ -35,10 +35,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 
 /**
  * A real filesystem.

@@ -15,27 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.vfs;
 
-package org.jboss.vfs.spi;
-
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.io.Closeable;
+import java.io.File;
 
 /**
- * An iterable enumeration wrapper.
+ * This class represents a handle to a mounted FileSystem.  This can
+ * be used to close/cleanup the FileSystem as well as to access the
+ * mount source.
  *
- * @param <T> the element type
- * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
+ * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  */
-class EnumerationIterable<T> implements Iterable<T> {
-
-    private final Enumeration<T> entries;
-
-    public EnumerationIterable(Enumeration<T> entries) {
-        this.entries = entries;
-    }
-
-    public Iterator<T> iterator() {
-        return new EnumerationIterator<T>(entries);
-    }
+public interface MountHandle extends Closeable {
+    /**
+     * Get the source file used for the mount.
+     *
+     * @return the source file
+     */
+    File getMountSource();
 }

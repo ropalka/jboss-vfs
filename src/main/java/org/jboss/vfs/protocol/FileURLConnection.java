@@ -26,7 +26,7 @@ import java.security.Permission;
 
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.spi.RootFileSystem;
+import org.jboss.vfs.RootFileSystem;
 
 /**
  * Implementation URLConnection that will delegate to the VFS RootFileSystem.

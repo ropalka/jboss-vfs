@@ -16,34 +16,26 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
- * An enumeration iterator.
+ * An iterable enumeration wrapper.
  *
  * @param <T> the element type
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
-class EnumerationIterator<T> implements Iterator<T> {
+class EnumerationIterable<T> implements Iterable<T> {
 
     private final Enumeration<T> entries;
 
-    public EnumerationIterator(Enumeration<T> entries) {
+    public EnumerationIterable(Enumeration<T> entries) {
         this.entries = entries;
     }
 
-    public boolean hasNext() {
-        return entries.hasMoreElements();
-    }
-
-    public T next() {
-        return entries.nextElement();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
+    public Iterator<T> iterator() {
+        return new EnumerationIterator<T>(entries);
     }
 }

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,10 +27,6 @@ import java.security.CodeSigner;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileAssembly;
 
 /**
  * FileSystem used to mount an Assembly into the VFS.

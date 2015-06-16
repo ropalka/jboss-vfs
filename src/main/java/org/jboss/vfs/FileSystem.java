@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import java.io.Closeable;
 import java.io.File;
@@ -26,8 +26,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.CodeSigner;
 import java.util.List;
-
-import org.jboss.vfs.VirtualFile;
 
 /**
  * A file system which is mounted in to the VFS.  This is the driver class for a given virtual file system type.  An

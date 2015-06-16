@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,8 +28,6 @@ import java.security.CodeSigner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.jboss.vfs.VirtualFile;
 
 /**
  * A special FileSystem which supports multiple roots.

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.spi;
+package org.jboss.vfs;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -40,11 +40,6 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.jboss.vfs.TempDir;
-import org.jboss.vfs.VFSLogger;
-import org.jboss.vfs.VFSMessages;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.jboss.vfs.util.PathTokenizer;
 
 /**

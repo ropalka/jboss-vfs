@@ -54,7 +54,6 @@ import java.util.zip.ZipFile;
 
 import org.jboss.vfs.protocol.FileURLStreamHandler;
 import org.jboss.vfs.protocol.VirtualFileURLStreamHandler;
-import org.jboss.vfs.spi.MountHandle;
 import org.jboss.vfs.util.PaddedManifestStream;
 import org.jboss.vfs.util.PathTokenizer;
 

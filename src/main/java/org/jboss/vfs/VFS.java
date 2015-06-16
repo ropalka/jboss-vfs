@@ -40,13 +40,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.jboss.vfs.spi.AssemblyFileSystem;
-import org.jboss.vfs.spi.FileSystem;
-import org.jboss.vfs.spi.JavaZipFileSystem;
-import org.jboss.vfs.spi.MountHandle;
-import org.jboss.vfs.spi.RealFileSystem;
-import org.jboss.vfs.spi.RootFileSystem;
-
 /**
  * Virtual File System
  *

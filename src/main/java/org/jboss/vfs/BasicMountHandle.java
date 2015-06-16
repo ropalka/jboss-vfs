@@ -21,9 +21,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
-import org.jboss.vfs.spi.FileSystem;
-import org.jboss.vfs.spi.MountHandle;
-
 /**
  * MountHandle implementation.  Provides the default behavior
  * of delegating to the FileSystem to get the mount source as
