@@ -15,18 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.util;
+package org.jboss.vfs;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import org.jboss.vfs.PaddedManifestStream;
-import org.jboss.vfs.VFS;
-
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.junit.Test;
 
 /**

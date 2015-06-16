@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -29,10 +29,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.jboss.test.BaseTestCase;
-import org.jboss.vfs.TempFileProvider;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.junit.internal.ArrayComparisonFailure;
 
 /**

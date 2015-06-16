@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -25,10 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.jboss.vfs.TempDir;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 
 /**
  * @author <a href="mailto:jbailey@redhat.com">John Bailey</a>

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -28,10 +28,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import junit.framework.Test;
-import org.jboss.test.vfs.support.VirtualFileAdaptor;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
+import org.jboss.vfs.support.VirtualFileAdaptor;
 
 /**
  * Tests of no copy nested jars

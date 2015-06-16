@@ -1,13 +1,10 @@
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

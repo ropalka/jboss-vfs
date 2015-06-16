@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.Closeable;
 import java.io.File;
@@ -38,13 +38,8 @@ import java.util.jar.Manifest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.jboss.test.vfs.support.ClassPathIterator;
-import org.jboss.test.vfs.support.ClassPathIterator.ClassPathEntry;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VisitorAttributes;
-import org.jboss.vfs.SuffixMatchFilter;
+import org.jboss.vfs.support.ClassPathIterator;
+import org.jboss.vfs.support.ClassPathIterator.ClassPathEntry;
 /**
  * Tests of the VFS implementation
  *

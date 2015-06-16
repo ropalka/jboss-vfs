@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,10 +23,6 @@ import java.util.concurrent.Executors;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import org.jboss.vfs.TempFileProvider;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.junit.Test;
 import org.junit.internal.ArrayComparisonFailure;
 

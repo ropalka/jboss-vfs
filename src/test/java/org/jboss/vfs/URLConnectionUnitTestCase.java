@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -28,10 +28,6 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 import junit.framework.Test;
-import org.jboss.vfs.TempFileProvider;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 import org.jboss.vfs.protocol.FileURLConnection;
 import org.jboss.vfs.protocol.VfsUrlStreamHandlerFactory;
 

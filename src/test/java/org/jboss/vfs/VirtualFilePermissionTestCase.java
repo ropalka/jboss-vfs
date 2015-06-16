@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import static org.jboss.vfs.VirtualFilePermission.FLAG_DELETE;
 import static org.jboss.vfs.VirtualFilePermission.FLAG_GET_FILE;
@@ -26,7 +26,6 @@ import static org.jboss.vfs.VirtualFilePermission.FLAG_READ;
 import java.security.PermissionCollection;
 
 import junit.framework.TestCase;
-import org.jboss.vfs.VirtualFilePermission;
 
 public final class VirtualFilePermissionTestCase extends TestCase {
 

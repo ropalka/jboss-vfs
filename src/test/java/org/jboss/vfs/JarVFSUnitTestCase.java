@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.jboss.vfs.VirtualFile;
 import org.junit.Assert;
 
 /**

@@ -15,14 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.vfs;
+package org.jboss.vfs;
 
 import java.io.Closeable;
 import java.io.File;
-
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
 
 /**
  * Tests functionality of the MountHandle retrieving mount source.
