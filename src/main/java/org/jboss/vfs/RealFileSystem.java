@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
-public final class RealFileSystem implements FileSystem {
+final class RealFileSystem implements FileSystem {
 
     private static final boolean NEEDS_CONVERSION = File.separatorChar != '/';
 

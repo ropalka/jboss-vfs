@@ -13,7 +13,7 @@ import org.jboss.logging.annotations.MessageBundle;
  * @author Tomaz Cerar (c) 2013 Red Hat Inc.
  */
 @MessageBundle(projectCode = "VFS")
-public interface VFSMessages {
+interface VFSMessages {
     /**
      * The messages
      */

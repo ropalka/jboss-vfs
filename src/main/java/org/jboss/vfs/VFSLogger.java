@@ -15,7 +15,7 @@ import static org.jboss.logging.Logger.Level.INFO;
  */
 
 @MessageLogger(projectCode = "VFS")
-public interface VFSLogger extends BasicLogger {
+interface VFSLogger extends BasicLogger {
 
     /**
      * A logger with a category of the package name.

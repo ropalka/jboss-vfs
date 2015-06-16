@@ -25,7 +25,7 @@ import java.io.InputStream;
  *
  * @author ehsavoie
  */
-public class PaddedManifestStream extends InputStream {
+class PaddedManifestStream extends InputStream {
 
     private final InputStream realStream;
     private int previousChar = -1;

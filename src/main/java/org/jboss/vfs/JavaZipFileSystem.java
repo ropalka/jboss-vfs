@@ -49,7 +49,7 @@ import java.util.jar.JarFile;
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public final class JavaZipFileSystem implements FileSystem {
+final class JavaZipFileSystem implements FileSystem {
 
     private final JarFile zipFile;
     private final File archiveFile;
