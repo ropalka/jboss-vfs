@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.protocol;
+package org.jboss.vfs;
 
 import java.io.File;
 import java.io.FilePermission;
@@ -24,17 +24,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.Permission;
 
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.RootFileSystem;
-
 /**
  * Implementation URLConnection that will delegate to the VFS RootFileSystem.
  *
  * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  * @version $Revision$
  */
-public class FileURLConnection extends AbstractURLConnection {
+class FileURLConnection extends AbstractURLConnection {
 
     private final RootFileSystem rootFileSystem = RootFileSystem.ROOT_INSTANCE;
 

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.protocol;
+package org.jboss.vfs;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -32,7 +32,7 @@ import java.util.Set;
  * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  * @version $Revision$
  */
-public abstract class AbstractLocalURLStreamHandler extends URLStreamHandler {
+abstract class AbstractLocalURLStreamHandler extends URLStreamHandler {
 
     private static final Set<String> locals;
 

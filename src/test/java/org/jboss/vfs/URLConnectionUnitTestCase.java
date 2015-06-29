@@ -28,8 +28,6 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 import junit.framework.Test;
-import org.jboss.vfs.protocol.FileURLConnection;
-import org.jboss.vfs.protocol.VfsUrlStreamHandlerFactory;
 
 /**
  * Basic tests of URL connection

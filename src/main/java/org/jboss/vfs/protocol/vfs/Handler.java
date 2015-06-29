@@ -18,7 +18,7 @@
 
 package org.jboss.vfs.protocol.vfs;
 
-import org.jboss.vfs.protocol.VirtualFileURLStreamHandler;
+import org.jboss.vfs.VirtualFileURLStreamHandler;
 
 /**
  * Stub handler class.

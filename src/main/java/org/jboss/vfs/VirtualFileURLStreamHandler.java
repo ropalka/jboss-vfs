@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.jboss.vfs.protocol;
+package org.jboss.vfs;
 
 import java.io.IOException;
 import java.net.URL;

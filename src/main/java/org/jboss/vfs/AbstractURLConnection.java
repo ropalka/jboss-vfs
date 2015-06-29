@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.protocol;
+package org.jboss.vfs;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,15 +29,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.jboss.vfs.VFSUtils;
-
 /**
  * Abstract base class for VFS URLConection impls.
  *
  * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  * @version $Revision$
  */
-public abstract class AbstractURLConnection extends URLConnection {
+abstract class AbstractURLConnection extends URLConnection {
 
     private String contentType;
 

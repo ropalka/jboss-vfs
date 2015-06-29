@@ -49,9 +49,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.jboss.vfs.protocol.FileURLStreamHandler;
-import org.jboss.vfs.protocol.VirtualFileURLStreamHandler;
-
 /**
  * VFS Utilities
  *

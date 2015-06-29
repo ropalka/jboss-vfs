@@ -15,32 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.protocol;
+package org.jboss.vfs;
 
-
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
- * URLStreamHandlerFactory providing URLStreamHandlers for VFS based URLS.
+ * A File based URLStreamHandler
  *
- * @author John Bailey
+ * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
+ * @version $Revision$
  */
-public class VfsUrlStreamHandlerFactory implements URLStreamHandlerFactory {
-
-
-    private static Map<String, URLStreamHandler> handlerMap = new HashMap<String, URLStreamHandler>(2);
-
-    static {
-        handlerMap.put("file", new FileURLStreamHandler());
-        handlerMap.put("vfs", new VirtualFileURLStreamHandler());
-    }
-
-
+public class FileURLStreamHandler extends AbstractLocalURLStreamHandler {
     @Override
-    public URLStreamHandler createURLStreamHandler(final String protocol) {
-        return handlerMap.get(protocol);
+    protected URLConnection openConnection(final URL url) throws IOException {
+        ensureLocal(url);
+        return new FileURLConnection(url);
     }
 }
