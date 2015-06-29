@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
-public final class TempDir implements Closeable {
+final class TempDir implements Closeable {
 
     private final TempFileProvider provider;
     private final File root;

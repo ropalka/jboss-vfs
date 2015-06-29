@@ -26,19 +26,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLStreamHandler;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,10 +61,6 @@ import org.jboss.vfs.protocol.VirtualFileURLStreamHandler;
  * @version $Revision: 1.1 $
  */
 public class VFSUtils {
-    /**
-     * The default encoding
-     */
-    private static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * Constant representing the URL vfs protocol
@@ -113,34 +106,6 @@ public class VFSUtils {
     }
 
     /**
-     * Get the paths string for a collection of virtual files
-     *
-     * @param paths the paths
-     * @return the string
-     * @throws IllegalArgumentException for null paths
-     */
-    public static String getPathsString(Collection<VirtualFile> paths) {
-        if (paths == null) {
-            throw MESSAGES.nullArgument("paths");
-        }
-        StringBuilder buffer = new StringBuilder();
-        boolean first = true;
-        for (VirtualFile path : paths) {
-            if (path == null) { throw new IllegalArgumentException("Null path in " + paths); }
-            if (first == false) {
-                buffer.append(':');
-            } else {
-                first = false;
-            }
-            buffer.append(path.getPathName());
-        }
-        if (first == true) {
-            buffer.append("<empty>");
-        }
-        return buffer.toString();
-    }
-
-    /**
      * Get a manifest from a virtual file, assuming the virtual file is the root of an archive
      *
      * @param archive the root the archive
@@ -180,68 +145,6 @@ public class VFSUtils {
             safeClose(stream);
         }
     }
-
-    /**
-     * Fix a name (removes any trailing slash)
-     *
-     * @param name the name to fix
-     * @return the fixed name
-     * @throws IllegalArgumentException for a null name
-     */
-    public static String fixName(String name) {
-        if (name == null) {
-            throw MESSAGES.nullArgument("name");
-        }
-        int length = name.length();
-        if (length <= 1) { return name; }
-        if (name.charAt(length - 1) == '/') { return name.substring(0, length - 1); }
-        return name;
-    }
-
-    /**
-     * Decode the path with UTF-8 encoding..
-     *
-     * @param path the path to decode
-     * @return decoded path
-     */
-    public static String decode(String path) {
-        return decode(path, DEFAULT_ENCODING);
-    }
-
-    /**
-     * Decode the path.
-     *
-     * @param path     the path to decode
-     * @param encoding the encoding
-     * @return decoded path
-     */
-    public static String decode(String path, String encoding) {
-        try {
-            return URLDecoder.decode(path, encoding);
-        } catch (UnsupportedEncodingException e) {
-            throw MESSAGES.cannotDecode(path,encoding,e);
-        }
-    }
-
-    /**
-     * Get the name.
-     *
-     * @param uri the uri
-     * @return name from uri's path
-     */
-    public static String getName(URI uri) {
-        if (uri == null) {
-            throw MESSAGES.nullArgument("uri");
-        }
-        String name = uri.getPath();
-        if (name != null) {
-            // TODO: Not correct for certain uris like jar:...!/
-            int lastSlash = name.lastIndexOf('/');
-            if (lastSlash > 0) { name = name.substring(lastSlash + 1); }
-        }
-        return name;
-    }
-
 
     /**
      * Deal with urls that may include spaces.
