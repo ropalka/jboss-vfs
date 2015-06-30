@@ -39,7 +39,7 @@ import java.util.zip.ZipEntry;
  *
  * @author <a href="baileyje@gmail.com">John Bailey</a>
  */
-public class VirtualJarInputStream extends JarInputStream {
+class VirtualJarInputStream extends JarInputStream {
     private static final String MANIFEST_NAME = "MANIFEST.MF";
     private static final String META_INF_DIR = "META-INF";
     private static final VirtualFileFilter MANIFEST_FILTER = new VirtualFileFilter() {

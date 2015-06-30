@@ -23,7 +23,7 @@ package org.jboss.vfs;
  * @author adrian@jboss.org
  * @version $Revision: 44334 $
  */
-public interface VirtualFileFilterWithAttributes extends VirtualFileFilter {
+interface VirtualFileFilterWithAttributes extends VirtualFileFilter {
 
     /**
      * Get the attributes for this filter
