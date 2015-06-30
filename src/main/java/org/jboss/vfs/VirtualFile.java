@@ -404,7 +404,7 @@ public final class VirtualFile implements Serializable {
      * @throws IllegalArgumentException if the visitor is null
      * @throws IllegalStateException    if the file is closed
      */
-    public void visit(VirtualFileVisitor visitor) throws IOException {
+    void visit(VirtualFileVisitor visitor) throws IOException {
         visit(visitor, true);
     }
 

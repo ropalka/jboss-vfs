@@ -35,7 +35,7 @@ import java.util.List;
  * This is currently accomplished by requiring that VirtualFile.getPathName()
  * produce output that is consumable by java.io.File as a path.
  */
-public final class RootFileSystem implements FileSystem {
+final class RootFileSystem implements FileSystem {
 
     public static final RootFileSystem ROOT_INSTANCE = new RootFileSystem();
 

@@ -23,7 +23,7 @@ package org.jboss.vfs;
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @version $Revision: 1.1 $
  */
-public interface VirtualFileVisitor {
+interface VirtualFileVisitor {
 
     /**
      * Get the search attribues for this visitor
