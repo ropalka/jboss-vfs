@@ -31,7 +31,7 @@ import java.util.zip.ZipEntry;
  *
  * @author <a href="mailto:jbailey@redhat.com">John Bailey</a>
  */
-public class VirtualJarFileInputStream extends InputStream {
+class VirtualJarFileInputStream extends InputStream {
     // Needs to be sufficiently sized to allow local and central file headers with a single entry name
     private static final int MINIMUM_BUFFER_LENGTH = 1024;
 
