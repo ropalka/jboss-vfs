@@ -261,32 +261,6 @@ public class VFS {
         return getRootVirtualFile().getChildrenRecursively(filter);
     }
 
-    /**
-     * Visit the virtual file system from the root
-     *
-     * @param visitor the visitor
-     * @throws IOException              for any problem accessing the VFS
-     * @throws IllegalArgumentException if the visitor is null
-     */
-    public static void visit(VirtualFileVisitor visitor) throws IOException {
-        visitor.visit(getRootVirtualFile());
-    }
-
-    /**
-     * Visit the virtual file system
-     *
-     * @param file    the file
-     * @param visitor the visitor
-     * @throws IOException              for any problem accessing the VFS
-     * @throws IllegalArgumentException if the file or visitor is null
-     */
-    protected static void visit(VirtualFile file, VirtualFileVisitor visitor) throws IOException {
-        if (file == null) {
-            throw VFSMessages.MESSAGES.nullArgument("file");
-        }
-        visitor.visit(file);
-    }
-
     static Mount getMount(VirtualFile virtualFile) {
         final ConcurrentMap<VirtualFile, Map<String, Mount>> mounts = VFS.mounts;
         for (; ; ) {
