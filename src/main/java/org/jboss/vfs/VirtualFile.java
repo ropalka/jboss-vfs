@@ -146,10 +146,6 @@ public final class VirtualFile implements Serializable {
      * @return the last modified time
      */
     public long getLastModified() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().getLastModified(mount.getMountPoint(), this);
     }
@@ -160,10 +156,6 @@ public final class VirtualFile implements Serializable {
      * @return the size
      */
     public long getSize() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().getSize(mount.getMountPoint(), this);
     }
@@ -174,10 +166,6 @@ public final class VirtualFile implements Serializable {
      * @return true if the file exists, false otherwise.
      */
     public boolean exists() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().exists(mount.getMountPoint(), this);
     }
@@ -210,10 +198,6 @@ public final class VirtualFile implements Serializable {
      * @return {@code true} if it is a plain file, {@code false} otherwise
      */
     public boolean isFile() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().isFile(mount.getMountPoint(), this);
     }
@@ -224,10 +208,6 @@ public final class VirtualFile implements Serializable {
      * @return {@code true} if it is a directory, {@code false} otherwise
      */
     public boolean isDirectory() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().isDirectory(mount.getMountPoint(), this);
     }
@@ -239,10 +219,6 @@ public final class VirtualFile implements Serializable {
      * @throws IOException for any error accessing the file system
      */
     public InputStream openStream() throws IOException {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         if (isDirectory()) {
             return new VirtualJarInputStream(this);
         }
@@ -256,10 +232,6 @@ public final class VirtualFile implements Serializable {
      * @return {@code true} if file was deleted
      */
     public boolean delete() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "delete"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().delete(mount.getMountPoint(), this);
     }
@@ -274,10 +246,6 @@ public final class VirtualFile implements Serializable {
      * @throws IOException if an I/O error occurs while producing the physical file
      */
     public File getPhysicalFile() throws IOException {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "getfile"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().getFile(mount.getMountPoint(), this);
     }
@@ -524,10 +492,6 @@ public final class VirtualFile implements Serializable {
      * @return the {@link CodeSigner}s for the virtual file, or {@code null} if not signed
      */
     public CodeSigner[] getCodeSigners() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new VirtualFilePermission(getPathName(), "read"));
-        }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().getCodeSigners(mount.getMountPoint(), this);
     }
