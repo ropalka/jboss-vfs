@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
-public interface FileSystem extends Closeable {
+interface FileSystem extends Closeable {
 
     /**
      * Get a real {@code File} for the given path within this filesystem.  Some filesystem types will need to make a copy
