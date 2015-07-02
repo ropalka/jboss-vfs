@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.vfs.support;
+package org.jboss.vfs;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -29,10 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.jboss.vfs.VFSUtils;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
 
 /**
  * ClassPathIterator logic used by UCL package mapping

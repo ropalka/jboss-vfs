@@ -38,8 +38,7 @@ import java.util.jar.Manifest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.jboss.vfs.support.ClassPathIterator;
-import org.jboss.vfs.support.ClassPathIterator.ClassPathEntry;
+import org.jboss.vfs.ClassPathIterator.ClassPathEntry;
 /**
  * Tests of the VFS implementation
  *

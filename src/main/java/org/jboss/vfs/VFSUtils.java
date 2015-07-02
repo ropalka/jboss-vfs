@@ -21,7 +21,6 @@ import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,27 +59,27 @@ public class VFSUtils {
     /**
      * Constant representing the URL vfs protocol
      */
-    public static final String VFS_PROTOCOL = "vfs";
+    static final String VFS_PROTOCOL = "vfs";
 
     /**
      * Constant representing the system property for forcing case sensitive
      */
-    public static final String FORCE_CASE_SENSITIVE_KEY = "jboss.vfs.forceCaseSensitive";
+    static final String FORCE_CASE_SENSITIVE_KEY = "jboss.vfs.forceCaseSensitive";
 
     /**
      * The {@link URLStreamHandler} for the 'vfs' protocol
      */
-    public static final URLStreamHandler VFS_URL_HANDLER = new VirtualFileURLStreamHandler();
+    static final URLStreamHandler VFS_URL_HANDLER = new VirtualFileURLStreamHandler();
 
     /**
      * The {@link URLStreamHandler} for the 'file' protocol
      */
-    public static final URLStreamHandler FILE_URL_HANDLER = new FileURLStreamHandler();
+    private static final URLStreamHandler FILE_URL_HANDLER = new FileURLStreamHandler();
 
     /**
      * The default buffer size to use for copies
      */
-    public static final int DEFAULT_BUFFER_SIZE = 65536;
+    private static final int DEFAULT_BUFFER_SIZE = 65536;
 
     /**
      * This variable indicates if the FileSystem should force case sensitive independently if
@@ -129,7 +128,7 @@ public class VFSUtils {
      * @return JAR's manifest
      * @throws IOException if problems while opening VF stream occur
      */
-    public static Manifest readManifest(VirtualFile manifest) throws IOException {
+    static Manifest readManifest(VirtualFile manifest) throws IOException {
         if (manifest == null) {
             throw MESSAGES.nullArgument("manifest file");
         }
@@ -148,7 +147,7 @@ public class VFSUtils {
      * @return uri the uri
      * @throws URISyntaxException for any error
      */
-    public static URI toURI(URL url) throws URISyntaxException {
+    static URI toURI(URL url) throws URISyntaxException {
         if (url == null) {
             throw MESSAGES.nullArgument("url");
         }
@@ -164,57 +163,13 @@ public class VFSUtils {
     }
 
     /**
-     * Ensure the url is convertible to URI by encoding spaces and percent characters if necessary
-     *
-     * @param url to be sanitized
-     * @return sanitized URL
-     * @throws URISyntaxException    if URI conversion can't be fixed
-     * @throws MalformedURLException if an error occurs
-     */
-    public static URL sanitizeURL(URL url) throws URISyntaxException, MalformedURLException {
-        return toURI(url).toURL();
-    }
-
-    /**
-     * Copy all the children from the original {@link VirtualFile} the target recursively.
-     *
-     * @param original the file to copy children from
-     * @param target   the file to copy the children to
-     * @throws IOException if any problems occur copying the files
-     */
-    public static void copyChildrenRecursive(VirtualFile original, VirtualFile target) throws IOException {
-        if (original == null) {
-            throw MESSAGES.nullArgument("Original VirtualFile");
-        }
-        if (target == null) {
-            throw MESSAGES.nullArgument("Target VirtualFile");
-        }
-
-        List<VirtualFile> children = original.getChildren();
-        for (VirtualFile child : children) {
-            VirtualFile targetChild = target.getChild(child.getName());
-            File childFile = child.getPhysicalFile();
-            if (childFile.isDirectory()) {
-                if (!targetChild.getPhysicalFile().mkdir()) {
-                    throw MESSAGES.problemCreatingNewDirectory(targetChild);
-                }
-                copyChildrenRecursive(child, targetChild);
-            } else {
-                FileInputStream is = new FileInputStream(childFile);
-                writeFile(targetChild, is);
-            }
-        }
-    }
-
-
-    /**
      * Copy input stream to output stream and close them both
      *
      * @param is input stream
      * @param os output stream
      * @throws IOException for any error
      */
-    public static void copyStreamAndClose(InputStream is, OutputStream os) throws IOException {
+    static void copyStreamAndClose(InputStream is, OutputStream os) throws IOException {
         copyStreamAndClose(is, os, DEFAULT_BUFFER_SIZE);
     }
 
@@ -226,7 +181,7 @@ public class VFSUtils {
      * @param bufferSize the buffer size to use
      * @throws IOException for any error
      */
-    public static void copyStreamAndClose(InputStream is, OutputStream os, int bufferSize)
+    private static void copyStreamAndClose(InputStream is, OutputStream os, int bufferSize)
             throws IOException {
         try {
             copyStream(is, os, bufferSize);
@@ -247,7 +202,7 @@ public class VFSUtils {
      * @param os output stream
      * @throws IOException for any error
      */
-    public static void copyStream(InputStream is, OutputStream os) throws IOException {
+    static void copyStream(InputStream is, OutputStream os) throws IOException {
         copyStream(is, os, DEFAULT_BUFFER_SIZE);
     }
 
@@ -259,7 +214,7 @@ public class VFSUtils {
      * @param bufferSize the buffer size to use
      * @throws IOException for any error
      */
-    public static void copyStream(InputStream is, OutputStream os, int bufferSize)
+    static void copyStream(InputStream is, OutputStream os, int bufferSize)
             throws IOException {
         if (is == null) {
             throw MESSAGES.nullArgument("input stream");
@@ -271,41 +226,6 @@ public class VFSUtils {
         int rc;
         while ((rc = is.read(buff)) != -1) { os.write(buff, 0, rc); }
         os.flush();
-    }
-
-    /**
-     * Write the given bytes to the given virtual file, replacing its current contents (if any) or creating a new file if
-     * one does not exist.
-     *
-     * @param virtualFile the virtual file to write
-     * @param bytes       the bytes
-     * @throws IOException if an error occurs
-     */
-    public static void writeFile(VirtualFile virtualFile, byte[] bytes) throws IOException {
-        final File file = virtualFile.getPhysicalFile();
-        file.getParentFile().mkdirs();
-        final FileOutputStream fos = new FileOutputStream(file);
-        try {
-            fos.write(bytes);
-            fos.close();
-        } finally {
-            safeClose(fos);
-        }
-    }
-
-    /**
-     * Write the content from the given {@link InputStream} to the given virtual file, replacing its current contents (if any) or creating a new file if
-     * one does not exist.
-     *
-     * @param virtualFile the virtual file to write
-     * @param is          the input stream
-     * @throws IOException if an error occurs
-     */
-    public static void writeFile(VirtualFile virtualFile, InputStream is) throws IOException {
-        final File file = virtualFile.getPhysicalFile();
-        file.getParentFile().mkdirs();
-        final FileOutputStream fos = new FileOutputStream(file);
-        copyStreamAndClose(is, fos);
     }
 
     /**
@@ -323,7 +243,7 @@ public class VFSUtils {
      * @see VirtualFile#asDirectoryURL()
      * @see VirtualFile#asFileURL()
      */
-    public static URL getVirtualURL(VirtualFile file) throws MalformedURLException {
+    static URL getVirtualURL(VirtualFile file) throws MalformedURLException {
         try {
             final URI uri = getVirtualURI(file);
             final String scheme = uri.getScheme();
@@ -359,32 +279,8 @@ public class VFSUtils {
      * @see VirtualFile#asDirectoryURI()
      * @see VirtualFile#asFileURI()
      */
-    public static URI getVirtualURI(VirtualFile file) throws URISyntaxException {
+    static URI getVirtualURI(VirtualFile file) throws URISyntaxException {
         return new URI(VFS_PROTOCOL, "", file.getPathName(true), null);
-    }
-
-    /**
-     * Get a physical URL for a virtual file.  See the warnings on the {@link VirtualFile#getPhysicalFile()} method
-     * before using this method.
-     *
-     * @param file the virtual file
-     * @return the physical file URL
-     * @throws IOException if an I/O error occurs getting the physical file
-     */
-    public static URL getPhysicalURL(VirtualFile file) throws IOException {
-        return getPhysicalURI(file).toURL();
-    }
-
-    /**
-     * Get a physical URI for a virtual file.  See the warnings on the {@link VirtualFile#getPhysicalFile()} method
-     * before using this method.
-     *
-     * @param file the virtual file
-     * @return the physical file URL
-     * @throws IOException if an I/O error occurs getting the physical file
-     */
-    public static URI getPhysicalURI(VirtualFile file) throws IOException {
-        return file.getPhysicalFile().toURI();
     }
 
     /**
@@ -398,23 +294,11 @@ public class VFSUtils {
     public static URL getRootURL(VirtualFile file) throws MalformedURLException {
         final URI uri;
         try {
-            uri = getRootURI(file);
+            uri = VFS.getMount(file).getFileSystem().getRootURI();
         } catch (URISyntaxException e) {
             throw new MalformedURLException(e.getMessage());
         }
         return uri.toURL();
-    }
-
-    /**
-     * Get the physical root URL of the filesystem of a virtual file.  This URI is suitable for conversion to a class loader's
-     * code source URL or in similar situations where only standard URL types ({@code jar} and {@code file}) are supported.
-     *
-     * @param file the virtual file
-     * @return the root URI
-     * @throws URISyntaxException if the URI is not valid
-     */
-    public static URI getRootURI(final VirtualFile file) throws URISyntaxException {
-        return VFS.getMount(file).getFileSystem().getRootURI();
     }
 
     /**
@@ -469,17 +353,13 @@ public class VFSUtils {
         }
     }
 
-    public static boolean isForceCaseSensitive() {
-        return forceCaseSensitive;
-    }
-
     /**
      * In case the file system is not case sensitive we compare the canonical path with
      * the absolute path of the file after normalized.
      * @param file
      * @return
      */
-    public static boolean exists(File file) {
+    static boolean exists(File file) {
         try {
             boolean fileExists = file.exists();
             if(!forceCaseSensitive || !fileExists) {
@@ -500,7 +380,7 @@ public class VFSUtils {
      * @param root the real file to delete
      * @return {@code true} if the file was deleted
      */
-    public static boolean recursiveDelete(File root) {
+    static boolean recursiveDelete(File root) {
         boolean ok = true;
         if (root.isDirectory()) {
             final File[] files = root.listFiles();
@@ -514,80 +394,6 @@ public class VFSUtils {
             ok &= root.delete() || !root.exists();
         }
         return ok;
-    }
-
-    /**
-     * Attempt to recursively delete a virtual file.
-     *
-     * @param root the virtual file to delete
-     * @return {@code true} if the file was deleted
-     */
-    public static boolean recursiveDelete(VirtualFile root) {
-        boolean ok = true;
-        if (root.isDirectory()) {
-            final List<VirtualFile> files = root.getChildren();
-            for (VirtualFile file : files) {
-                ok &= recursiveDelete(file);
-            }
-            return ok && (root.delete() || !root.exists());
-        } else {
-            ok &= root.delete() || !root.exists();
-        }
-        return ok;
-    }
-
-    /**
-     * Recursively copy a file or directory from one location to another.
-     *
-     * @param original the original file or directory
-     * @param destDir  the destination directory
-     * @throws IOException if an I/O error occurs before the copy is complete
-     */
-    public static void recursiveCopy(File original, File destDir) throws IOException {
-        final String name = original.getName();
-        final File destFile = new File(destDir, name);
-        if (original.isDirectory()) {
-            destFile.mkdir();
-            for (File file : original.listFiles()) {
-                recursiveCopy(file, destFile);
-            }
-        } else {
-            final OutputStream os = new FileOutputStream(destFile);
-            try {
-                final InputStream is = new FileInputStream(original);
-                copyStreamAndClose(is, os);
-            } finally {
-                // in case the input stream open fails
-                safeClose(os);
-            }
-        }
-    }
-
-    /**
-     * Recursively copy a file or directory from one location to another.
-     *
-     * @param original the original file or directory
-     * @param destDir  the destination directory
-     * @throws IOException if an I/O error occurs before the copy is complete
-     */
-    public static void recursiveCopy(File original, VirtualFile destDir) throws IOException {
-        final String name = original.getName();
-        final File destFile = destDir.getChild(name).getPhysicalFile();
-        if (original.isDirectory()) {
-            destFile.mkdir();
-            for (File file : original.listFiles()) {
-                recursiveCopy(file, destFile);
-            }
-        } else {
-            final OutputStream os = new FileOutputStream(destFile);
-            try {
-                final InputStream is = new FileInputStream(original);
-                copyStreamAndClose(is, os);
-            } finally {
-                // in case the input stream open fails
-                safeClose(os);
-            }
-        }
     }
 
     /**
@@ -617,33 +423,6 @@ public class VFSUtils {
         }
     }
 
-    /**
-     * Recursively copy a file or directory from one location to another.
-     *
-     * @param original the original virtual file or directory
-     * @param destDir  the destination virtual directory
-     * @throws IOException if an I/O error occurs before the copy is complete
-     */
-    public static void recursiveCopy(VirtualFile original, VirtualFile destDir) throws IOException {
-        final String name = original.getName();
-        final File destFile = destDir.getChild(name).getPhysicalFile();
-        if (original.isDirectory()) {
-            destFile.mkdir();
-            for (VirtualFile file : original.getChildren()) {
-                recursiveCopy(file, destFile);
-            }
-        } else {
-            final OutputStream os = new FileOutputStream(destFile);
-            try {
-                final InputStream is = original.openStream();
-                copyStreamAndClose(is, os);
-            } finally {
-                // in case the input stream open fails
-                safeClose(os);
-            }
-        }
-    }
-
     private static final InputStream EMPTY_STREAM = new InputStream() {
         public int read() throws IOException {
             return -1;
@@ -655,10 +434,9 @@ public class VFSUtils {
      *
      * @return the empty input stream
      */
-    public static InputStream emptyStream() {
+    static InputStream emptyStream() {
         return EMPTY_STREAM;
     }
-
 
     /**
      * Get an input stream that will always be consumable as a Zip/Jar file.  The input stream will not be an instance
@@ -703,7 +481,7 @@ public class VFSUtils {
      * @param destDir the destination directory
      * @throws IOException if an error occurs
      */
-    public static void unzip(File zipFile, File destDir) throws IOException {
+    static void unzip(File zipFile, File destDir) throws IOException {
         final ZipFile zip = new ZipFile(zipFile);
         try {
             final Set<File> createdDirs = new HashSet<File>();
@@ -769,7 +547,7 @@ public class VFSUtils {
      * @return the canonical path
      */
     @SuppressWarnings("UnusedLabel") // for documentation
-    public static String canonicalize(final String path) {
+    static String canonicalize(final String path) {
         final int length = path.length();
         // 0 - start
         // 1 - got one .

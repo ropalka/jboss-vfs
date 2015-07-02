@@ -28,7 +28,6 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import junit.framework.Test;
-import org.jboss.vfs.support.VirtualFileAdaptor;
 
 /**
  * Tests of no copy nested jars

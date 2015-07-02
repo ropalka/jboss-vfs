@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.jboss.vfs.support;
+package org.jboss.vfs;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,9 +24,6 @@ import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VirtualFile;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.com">Ales Justin</a>

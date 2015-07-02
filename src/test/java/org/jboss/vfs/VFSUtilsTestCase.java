@@ -17,14 +17,10 @@
  */
 package org.jboss.vfs;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.concurrent.Executors;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import org.junit.Test;
-import org.junit.internal.ArrayComparisonFailure;
 
 /**
  * Test to ensure the functionality of {@link VFSUtils} methods
@@ -35,21 +31,6 @@ public class VFSUtilsTestCase extends AbstractVFSTest {
 
     public VFSUtilsTestCase(String name) {
         super(name);
-    }
-
-    @Test
-    public void testCopyChildrenRecursive() throws Exception {
-        VirtualFile original = getVirtualFile("/vfs/test/jar1");
-        VirtualFile target = VFS.getChild("/target-jar1");
-        Closeable handle = null;
-        try {
-            handle = VFS.mountTemp(target, TempFileProvider.create("test", Executors.newSingleThreadScheduledExecutor()));
-            VFSUtils.copyChildrenRecursive(original, target);
-            assertChildren(original, target);
-
-        } finally {
-            VFSUtils.safeClose(handle);
-        }
     }
 
     @Test
@@ -74,18 +55,5 @@ public class VFSUtilsTestCase extends AbstractVFSTest {
         assertEquals("Implementation-Version", "1.0.0.GA-jboss", attributes.getValue("Implementation-Version"));
         assertEquals("Implementation-Vendor", "JBoss Inc.", attributes.getValue("Implementation-Vendor"));
         assertEquals("Created-By", "${java.runtime.version} (${java.vendor})", attributes.getValue("Created-By"));
-    }
-
-    private void assertChildren(VirtualFile original, VirtualFile target) throws ArrayComparisonFailure, IOException {
-        assertEquals("Original and target must have the same numer of children", original.getChildren().size(), target.getChildren().size());
-        for (VirtualFile child : original.getChildren()) {
-            VirtualFile targetChild = target.getChild(child.getName());
-            assertTrue("Target should contain same children as original", targetChild.exists());
-            if (child.isDirectory()) {
-                assertChildren(child, targetChild);
-            } else {
-                assertContentEqual(child, targetChild);
-            }
-        }
     }
 }
