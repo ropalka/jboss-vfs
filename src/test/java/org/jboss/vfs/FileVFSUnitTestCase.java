@@ -132,7 +132,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals("jar2", title2);
             mfIS2.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -158,7 +158,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals("1.0.0.GA", version);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -200,7 +200,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals("1.0.0.GA", version);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -241,7 +241,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals("jar1-filesonly", title);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -308,7 +308,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertFalse("WEB-INF/classes is not a leaf", classes.isFile());
             assertTrue("WEB-INF/classes is not a leaf", classes.isDirectory());
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -339,7 +339,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertTrue("ClassInJar1.class", names.contains("org/jboss/test/vfs/support/jar1/ClassInJar1.class"));
             assertTrue("ClassInJar1$InnerClass.class", names.contains("org/jboss/test/vfs/support/jar1/ClassInJar1$InnerClass.class"));
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -401,7 +401,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertFalse("root isFile", root.isFile());
             assertTrue("root isDirectory", root.isDirectory());
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -435,7 +435,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertNotNull("ClassInJar2.class VF", c2);
             log.debug("Found ClassInJar2.class: " + c2);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -513,7 +513,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals(Attributes.Name.SPECIFICATION_TITLE.toString(), "jar1", version);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -540,7 +540,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             assertEquals(Attributes.Name.SPECIFICATION_TITLE.toString(), "jar1", version);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -574,7 +574,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             }
             assertEquals("There were 6 classes", 6, count);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -608,7 +608,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             }
             assertEquals("There were 4 classes", 4, count);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -658,7 +658,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
                 parent = vf;
             }
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -692,7 +692,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             title = mf.getMainAttributes().getValue(Attributes.Name.SPECIFICATION_TITLE);
             assertEquals(Attributes.Name.SPECIFICATION_TITLE.toString(), "jar1-filesonly", title);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -874,7 +874,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
                mfIS.close();
          */
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -906,7 +906,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             jar1URL = packedJar.getChild("org/jboss/test/vfs/support").toURL();
             assertTrue("Jar directory entry URLs must end in /: " + jar1URL.toString(), jar1URL.toString().endsWith("/"));
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -938,7 +938,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             jar1URI = packedJar.getChild("org/jboss/test/vfs/support").toURI();
             assertTrue("Jar directory entry URLs must end in /: " + jar1URI.toString(), jar1URI.toString().endsWith("/"));
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -1004,7 +1004,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
                 }
             }
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -1038,7 +1038,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             is = uri.toURL().openStream();
             is.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -1079,7 +1079,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
             is = uri.toURL().openStream();
             is.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -1098,46 +1098,6 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         URI expectedURI = toVfsUri(new URI(rootURL.toString() + "/path%20with%20spaces/unpacked-tst.jar/"));
         assertEquals(expectedURI, uri);
     }
-
-    //   /**
-    //    * Tests that we can find the META-INF/some-data.xml in an unpacked deployment
-    //    *
-    //    * @throws Exception for any error
-    //    */
-    //   public void testGetMetaDataUnpackedJar() throws Exception
-    //   {
-    //      testGetMetaDataFromJar("unpacked-with-metadata.jar");
-    //   }
-    //
-    //   /**
-    //    * Tests that we can find the META-INF/some-data.xml in a packed deployment
-    //    *
-    //    * @throws Exception for any error
-    //    */
-    //   public void testGetMetaDataPackedJar() throws Exception
-    //   {
-    //      testGetMetaDataFromJar("with-metadata.jar");
-    //   }
-
-    //   private void testGetMetaDataFromJar(String name) throws Exception
-    //   {
-    //      URL rootURL = getResource("/vfs/test");
-    //     VirtualFile testdir = VFS.getChild(rootURL.getPath());
-    //
-    //      VirtualFile jar = testdir.getChild(name);
-    //      assertNotNull(jar);
-    //      VirtualFile metadataLocation = jar.getChild("META-INF");
-    //      assertNotNull(metadataLocation);
-    //
-    //      VirtualFile metadataByName = metadataLocation.getChild("some-data.xml");
-    //      assertNotNull(metadataByName);
-    //
-    //      //This is the same code as is called by AbstractDeploymentContext.getMetaDataFiles(String name, String suffix).
-    //      //The MetaDataMatchFilter is a copy of the one used there
-    //      List<VirtualFile> metaDataList = metadataLocation.getChildren(new MetaDataMatchFilter(null, "-data.xml"));
-    //      assertNotNull(metaDataList);
-    //      assertEquals("Wrong size", 1, metaDataList.size());
-    //   }
 
     /**
      * Validate that a URLClassLoader.findReource/getResourceAsStream calls for non-existing absolute

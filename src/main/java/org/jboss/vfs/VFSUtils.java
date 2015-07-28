@@ -306,7 +306,7 @@ public class VFSUtils {
      *
      * @param c the resource
      */
-    public static void safeClose(final Closeable c) {
+    static void safeClose(final Closeable c) {
         if (c != null) {
             try {
                 c.close();
@@ -319,31 +319,9 @@ public class VFSUtils {
     /**
      * Safely close some resource without throwing an exception.  Any exception will be logged at TRACE level.
      *
-     * @param closeables the resources
-     */
-    public static void safeClose(final Closeable... closeables) {
-        safeClose(Arrays.asList(closeables));
-    }
-
-    /**
-     * Safely close some resources without throwing an exception.  Any exception will be logged at TRACE level.
-     *
-     * @param ci the resources
-     */
-    public static void safeClose(final Iterable<? extends Closeable> ci) {
-        if (ci != null) {
-            for (Closeable closeable : ci) {
-                safeClose(closeable);
-            }
-        }
-    }
-
-    /**
-     * Safely close some resource without throwing an exception.  Any exception will be logged at TRACE level.
-     *
      * @param zipFile the resource
      */
-    public static void safeClose(final ZipFile zipFile) {
+    static void safeClose(final ZipFile zipFile) {
         if (zipFile != null) {
             try {
                 zipFile.close();

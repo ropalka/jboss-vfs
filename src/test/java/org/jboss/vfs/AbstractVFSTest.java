@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -39,6 +40,28 @@ import org.junit.internal.ArrayComparisonFailure;
  */
 public abstract class AbstractVFSTest extends BaseTestCase {
     protected TempFileProvider provider;
+
+    static void safeClose(final Closeable... closeables) {
+        safeClose(Arrays.asList(closeables));
+    }
+
+    static void safeClose(final Iterable<? extends Closeable> ci) {
+        if (ci != null) {
+            for (Closeable closeable : ci) {
+                safeClose(closeable);
+            }
+        }
+    }
+
+    static void safeClose(final Closeable c) {
+        if (c != null) {
+            try {
+                c.close();
+            } catch (Exception e) {
+                VFSLogger.ROOT_LOGGER.trace("Failed to close resource", e);
+            }
+        }
+    }
 
     public AbstractVFSTest(String name) {
         super(name);

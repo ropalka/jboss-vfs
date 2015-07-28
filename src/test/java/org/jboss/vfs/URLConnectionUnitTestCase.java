@@ -181,7 +181,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
             assertTrue(urlDerivedFile.isFile());
             assertFalse(vfsDerivedFile.equals(urlDerivedFile));
         } finally {
-            VFSUtils.safeClose(handle, provider);
+            safeClose(handle, provider);
         }
     }
 

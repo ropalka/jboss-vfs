@@ -78,7 +78,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             assertEquals("jar2", title2);
             mfIS2.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -112,7 +112,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             assertEquals("jar1", title1);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -145,7 +145,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             assertEquals("jar1-filesonly", title1);
             mfIS.close();
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -199,7 +199,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             textThree = serializeDeserialize(textThree, VirtualFile.class);
             testText(textThree);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -212,7 +212,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             VirtualFile text = file.getChild("test2.txt");
             testText(text);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -232,7 +232,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             assertNotNull(text);
             assertTrue(text.length() > 0);
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
@@ -310,7 +310,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
             assertNotNull("No beans dir", file.getChild("beans"));
             testVirtualFileAdaptor(file, "beans");
         } finally {
-            VFSUtils.safeClose(mounts);
+            safeClose(mounts);
         }
     }
 
