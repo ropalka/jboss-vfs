@@ -396,33 +396,6 @@ public class VFSUtils {
         return ok;
     }
 
-    /**
-     * Recursively copy a file or directory from one location to another.
-     *
-     * @param original the original virtual file or directory
-     * @param destDir  the destination directory
-     * @throws IOException if an I/O error occurs before the copy is complete
-     */
-    public static void recursiveCopy(VirtualFile original, File destDir) throws IOException {
-        final String name = original.getName();
-        final File destFile = new File(destDir, name);
-        if (original.isDirectory()) {
-            destFile.mkdir();
-            for (VirtualFile file : original.getChildren()) {
-                recursiveCopy(file, destFile);
-            }
-        } else {
-            final OutputStream os = new FileOutputStream(destFile);
-            try {
-                final InputStream is = original.openStream();
-                copyStreamAndClose(is, os);
-            } finally {
-                // in case the input stream open fails
-                safeClose(os);
-            }
-        }
-    }
-
     private static final InputStream EMPTY_STREAM = new InputStream() {
         public int read() throws IOException {
             return -1;
