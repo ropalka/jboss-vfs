@@ -37,7 +37,7 @@ public class MountHandleTestCase extends AbstractVFSTest {
         Closeable mountHandle = VFS.mountZip(jar, jar, provider);
         try {
             File mounted = jar.getPhysicalFile();
-            File source = VFSUtils.getMountSource(mountHandle);
+            File source = getMountSource(mountHandle);
 
             assertNotNull(origin);
             assertNotNull(mounted);
@@ -55,4 +55,9 @@ public class MountHandleTestCase extends AbstractVFSTest {
             VFSUtils.safeClose(mountHandle);
         }
     }
+
+    private static File getMountSource(Closeable handle) {
+        return (handle instanceof MountHandle) ? MountHandle.class.cast(handle).getMountSource() : null;
+    }
+
 }

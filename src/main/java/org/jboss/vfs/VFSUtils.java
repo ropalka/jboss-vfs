@@ -481,17 +481,6 @@ public class VFSUtils {
     }
 
     /**
-     * Return the mount source File for a given mount handle.
-     *
-     * @param handle The handle to get the source for
-     * @return The mount source file or null if the handle does not have a source, or is not a MountHandle
-     */
-    public static File getMountSource(Closeable handle) {
-        if (handle instanceof MountHandle) { return MountHandle.class.cast(handle).getMountSource(); }
-        return null;
-    }
-
-    /**
      * Canonicalize the given path.  Removes all {@code .} and {@code ..} segments from the path.
      *
      * @param path the relative or absolute possibly non-canonical path
