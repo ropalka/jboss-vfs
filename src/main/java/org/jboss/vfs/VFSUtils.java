@@ -105,7 +105,7 @@ public class VFSUtils {
      * @throws IOException              if there is an error reading the manifest or the virtual file is closed
      * @throws IllegalArgumentException for a null archive
      */
-    public static Manifest getManifest(VirtualFile archive) throws IOException {
+    static Manifest getManifest(VirtualFile archive) throws IOException {
         if (archive == null) {
             throw MESSAGES.nullArgument("archive");
         }
