@@ -34,13 +34,11 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -387,41 +385,6 @@ public class VFSUtils {
      */
     static InputStream emptyStream() {
         return EMPTY_STREAM;
-    }
-
-    /**
-     * Get an input stream that will always be consumable as a Zip/Jar file.  The input stream will not be an instance
-     * of a JarInputStream, but will stream bytes according to the Zip specification.  Using this method, a VFS file
-     * or directory can be written to disk as a normal jar/zip file.
-     *
-     * @param virtualFile The virtual to get a jar file input stream for
-     * @return An input stream returning bytes according to the zip spec
-     * @throws IOException if any problems occur
-     */
-    public static InputStream createJarFileInputStream(final VirtualFile virtualFile) throws IOException {
-        if (virtualFile.isDirectory()) {
-            final VirtualJarInputStream jarInputStream = new VirtualJarInputStream(virtualFile);
-            return new VirtualJarFileInputStream(jarInputStream);
-        }
-        InputStream inputStream = null;
-        try {
-            final byte[] expectedHeader = new byte[4];
-
-            expectedHeader[0] = (byte) (JarEntry.LOCSIG & 0xff);
-            expectedHeader[1] = (byte) ((JarEntry.LOCSIG >>> 8) & 0xff);
-            expectedHeader[2] = (byte) ((JarEntry.LOCSIG >>> 16) & 0xff);
-            expectedHeader[3] = (byte) ((JarEntry.LOCSIG >>> 24) & 0xff);
-
-            inputStream = virtualFile.openStream();
-            final byte[] bytes = new byte[4];
-            final int read = inputStream.read(bytes, 0, 4);
-            if (read < 4 || !Arrays.equals(expectedHeader, bytes)) {
-                throw MESSAGES.invalidJarSignature(Arrays.toString(bytes), Arrays.toString(expectedHeader));
-            }
-        } finally {
-            safeClose(inputStream);
-        }
-        return virtualFile.openStream();
     }
 
     /**
