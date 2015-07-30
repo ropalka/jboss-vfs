@@ -151,7 +151,7 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
 
     public void testLevelZips() throws Exception {
         URL rootURL = getResource("/vfs/test");
-        VirtualFile root = VFS.getChild(rootURL);
+        VirtualFile root = VFS.getChild(rootURL.toURI());
         VirtualFile one = root.getChild("level1.zip");
         List<Closeable> mounts = recursiveMount(one);
         try {
@@ -303,10 +303,10 @@ public class JARSerializationUnitTestCase extends AbstractVFSTest {
         URL url = getResource("/vfs/test/spring-ear.ear");
         String urlString = url.toExternalForm();
         int p = urlString.indexOf(":/");
-        List<Closeable> mounts = recursiveMount(VFS.getChild(url));
+        List<Closeable> mounts = recursiveMount(VFS.getChild(url.toURI()));
         try {
             url = new URL(VFSUtils.VFS_PROTOCOL + urlString.substring(p) + "/lib/spring-beans.jar/org/jboss/test/spring");
-            VirtualFile file = VFS.getChild(url);
+            VirtualFile file = VFS.getChild(url.toURI());
             assertNotNull("No beans dir", file.getChild("beans"));
             testVirtualFileAdaptor(file, "beans");
         } finally {

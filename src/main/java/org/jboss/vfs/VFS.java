@@ -25,15 +25,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,7 +91,7 @@ public class VFS {
      * @return a handle which can be used to unmount the filesystem
      * @throws IOException if an I/O error occurs, such as a filesystem already being mounted at the given mount point
      */
-    public static Closeable mount(VirtualFile mountPoint, FileSystem fileSystem) throws IOException {
+    static Closeable mount(VirtualFile mountPoint, FileSystem fileSystem) throws IOException {
         final VirtualFile parent = mountPoint.getParent();
         if (parent == null) {
             throw VFSMessages.MESSAGES.rootFileSystemAlreadyMounted();
@@ -120,20 +117,6 @@ public class VFS {
                 return mount;
             }
         }
-    }
-
-    /**
-     * Find a virtual file.
-     *
-     * @param url the URL whose path component is the child path
-     * @return the child
-     * @throws IllegalArgumentException    if the path is null
-     * @throws java.net.URISyntaxException for any uri error
-     * @deprecated use getChild(URI) instead
-     */
-    @Deprecated
-    public static VirtualFile getChild(URL url) throws URISyntaxException {
-        return getChild(url.toURI());
     }
 
     private static boolean isWindows() {
@@ -211,54 +194,8 @@ public class VFS {
      *
      * @return the root virtual file
      */
-    public static VirtualFile getRootVirtualFile() {
+    static VirtualFile getRootVirtualFile() {
         return rootVirtualFile;
-    }
-
-    /**
-     * Get the children
-     *
-     * @return the children
-     * @throws IOException for any problem accessing the virtual file system
-     */
-    public static List<VirtualFile> getChildren() throws IOException {
-        return getRootVirtualFile().getChildren(null);
-    }
-
-    /**
-     * Get the children
-     *
-     * @param filter to filter the children
-     * @return the children
-     * @throws IOException for any problem accessing the virtual file system
-     */
-    public static List<VirtualFile> getChildren(VirtualFileFilter filter) throws IOException {
-        return getRootVirtualFile().getChildren(filter);
-    }
-
-    /**
-     * Get all the children recursively<p>
-     * <p/>
-     * This always uses {@link VisitorAttributes#RECURSE}
-     *
-     * @return the children
-     * @throws IOException for any problem accessing the virtual file system
-     */
-    public static List<VirtualFile> getChildrenRecursively() throws IOException {
-        return getRootVirtualFile().getChildrenRecursively(null);
-    }
-
-    /**
-     * Get all the children recursively<p>
-     * <p/>
-     * This always uses {@link VisitorAttributes#RECURSE}
-     *
-     * @param filter to filter the children
-     * @return the children
-     * @throws IOException for any problem accessing the virtual file system
-     */
-    public static List<VirtualFile> getChildrenRecursively(VirtualFileFilter filter) throws IOException {
-        return getRootVirtualFile().getChildrenRecursively(filter);
     }
 
     static Mount getMount(VirtualFile virtualFile) {

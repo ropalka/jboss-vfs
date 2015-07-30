@@ -134,7 +134,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
 
     public void testVfsUrlContentType() throws Exception {
         URL url = getResource("/vfs/test/test-web.xml");
-        VirtualFile xml = VFS.getChild(url);
+        VirtualFile xml = VFS.getChild(url.toURI());
         URLConnection conn = xml.toURL().openConnection();
         String contentType = conn.getContentType();
         assertNotNull(contentType);
@@ -165,7 +165,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         File file = new File(url.toURI());
         assertNotNull(file);
 
-        VirtualFile vf = VFS.getChild(url);
+        VirtualFile vf = VFS.getChild(url.toURI());
         assertTrue(vf.isFile());
         // Mount a temp dir over the jar location in VFS
         TempFileProvider provider = null;
