@@ -28,7 +28,6 @@ import java.net.URL;
 import java.security.CodeSigner;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -68,16 +67,6 @@ public final class VirtualFile implements Serializable {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Get the simple VF name mapped to lowercase (x.java) (used by case-insensitive filesystems like ZIP).
-     *
-     * @return the lowercase simple file name
-     * @deprecated should not be used anymore, as the code is case-sensitive from JBVFS-170
-     */
-    public String getLowerCaseName() {
-        return lcname;
     }
 
     /**
@@ -171,28 +160,6 @@ public final class VirtualFile implements Serializable {
     }
 
     /**
-     * Determines whether this virtual file represents a true root of a file system.
-     * On UNIX, there is only one root "/". Howevever, on Windows there are an infinite
-     * number of roots that correspond to drives, or UNC paths.
-     *
-     * @return {@code true} if this represents a root.
-     */
-    public boolean isRoot() {
-        return parent == null;
-    }
-
-    /**
-     * Whether it is a simple leaf of the VFS, i.e. whether it can contain other files
-     *
-     * @return {@code true} if a simple file
-     * @deprecated use {@link #isDirectory()} or {@link #isFile()} instead
-     */
-    @Deprecated
-    public boolean isLeaf() {
-        return isFile();
-    }
-
-    /**
      * Determine whether the named virtual file is a plain file.
      *
      * @return {@code true} if it is a plain file, {@code false} otherwise
@@ -257,37 +224,6 @@ public final class VirtualFile implements Serializable {
      */
     public VirtualFile getParent() {
         return parent;
-    }
-
-    /**
-     * Get the all the parent files of this virtual file from this file to the root.  The leafmost file will be at the
-     * start of the array, and the rootmost will be at the end.
-     *
-     * @return the array of parent files
-     */
-    public VirtualFile[] getParentFiles() {
-        return getParentFiles(0);
-    }
-
-    /**
-     * Get the all the parent files of this virtual file from this file to the root as a list.  The leafmost file will be
-     * at the start of the list, and the rootmost will be at the end.
-     *
-     * @return the list of parent files
-     */
-    public List<VirtualFile> getParentFileList() {
-        return Arrays.asList(getParentFiles());
-    }
-
-    private VirtualFile[] getParentFiles(int idx) {
-        final VirtualFile[] array;
-        if (parent == null) {
-            array = new VirtualFile[idx + 1];
-        } else {
-            array = parent.getParentFiles(idx + 1);
-        }
-        array[idx] = this;
-        return array;
     }
 
     /**
@@ -448,7 +384,7 @@ public final class VirtualFile implements Serializable {
      * @return the url
      * @throws MalformedURLException if the URL is somehow malformed
      */
-    public URL asDirectoryURL() throws MalformedURLException {
+    URL asDirectoryURL() throws MalformedURLException {
         final String pathName = getPathName(false);
         return new URL(VFSUtils.VFS_PROTOCOL, "", -1, parent == null ? pathName : pathName + "/", VFSUtils.VFS_URL_HANDLER);
     }
@@ -459,7 +395,7 @@ public final class VirtualFile implements Serializable {
      * @return the uri
      * @throws URISyntaxException if the URI is somehow malformed
      */
-    public URI asDirectoryURI() throws URISyntaxException {
+    URI asDirectoryURI() throws URISyntaxException {
         final String pathName = getPathName(false);
         return new URI(VFSUtils.VFS_PROTOCOL, "", parent == null ? pathName : pathName + "/", null);
     }
@@ -482,7 +418,7 @@ public final class VirtualFile implements Serializable {
      * @return the url
      * @throws URISyntaxException if the URI is somehow malformed
      */
-    public URI asFileURI() throws URISyntaxException {
+    URI asFileURI() throws URISyntaxException {
         return new URI(VFSUtils.VFS_PROTOCOL, "", getPathName(false), null);
     }
 
