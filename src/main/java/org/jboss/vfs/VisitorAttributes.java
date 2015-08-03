@@ -54,24 +54,9 @@ public class VisitorAttributes {
     public static final VisitorAttributes RECURSE_LEAVES_ONLY = new ImmutableVisitorAttributes(true, RECURSE_ALL);
 
     /**
-     * Whether to include the root
-     */
-    private boolean includeRoot;
-
-    /**
      * Whether to only visit leaves
      */
     private boolean leavesOnly;
-
-    /**
-     * Whether to ignore individual file errors
-     */
-    private boolean ignoreErrors;
-
-    /**
-     * Whether to include hidden files
-     */
-    private boolean includeHidden;
 
     /**
      * A filter used to control whether a non-leaf is recursive visited
@@ -133,69 +118,6 @@ public class VisitorAttributes {
         recurseFilter = filter;
     }
 
-    /**
-     * Whether to include the root of the visit<p>
-     * <p/>
-     * Default: false
-     *
-     * @return the includeRoot.
-     */
-    public boolean isIncludeRoot() {
-        return includeRoot;
-    }
-
-    /**
-     * Set the includeRoot.
-     *
-     * @param includeRoot the includeRoot.
-     * @throws IllegalStateException if you attempt to modify one of the preconfigured static values of this class
-     */
-    public void setIncludeRoot(boolean includeRoot) {
-        this.includeRoot = includeRoot;
-    }
-
-    /**
-     * Whether to ignore individual errors<p>
-     * <p/>
-     * Default: false
-     *
-     * @return the ignoreErrors.
-     */
-    public boolean isIgnoreErrors() {
-        return ignoreErrors;
-    }
-
-    /**
-     * Set the ignoreErrors.
-     *
-     * @param ignoreErrors the ignoreErrors.
-     * @throws IllegalStateException if you attempt to modify one of the preconfigured static values of this class
-     */
-    public void setIgnoreErrors(boolean ignoreErrors) {
-        this.ignoreErrors = ignoreErrors;
-    }
-
-    /**
-     * Whether to include hidden files<p>
-     * <p/>
-     * Default: false
-     *
-     * @return the includeHidden.
-     */
-    public boolean isIncludeHidden() {
-        return includeHidden;
-    }
-
-    /**
-     * Set the includeHidden.
-     *
-     * @param includeHidden the includeHidden.
-     * @throws IllegalStateException if you attempt to modify one of the preconfigured static values of this class
-     */
-    public void setIncludeHidden(boolean includeHidden) {
-        this.includeHidden = includeHidden;
-    }
-
     private static class AcceptAnyFilter implements VirtualFileFilter {
 
         public boolean accepts(VirtualFile file) {
@@ -231,22 +153,7 @@ public class VisitorAttributes {
         }
 
         @Override
-        public void setIncludeRoot(boolean includeRoot) {
-            throw MESSAGES.preconfiguredAttributesAreImmutable();
-        }
-
-        @Override
         public void setRecurseFilter(VirtualFileFilter filter) {
-            throw MESSAGES.preconfiguredAttributesAreImmutable();
-        }
-
-        @Override
-        public void setIgnoreErrors(boolean ignoreErrors) {
-            throw MESSAGES.preconfiguredAttributesAreImmutable();
-        }
-
-        @Override
-        public void setIncludeHidden(boolean includeHidden) {
             throw MESSAGES.preconfiguredAttributesAreImmutable();
         }
     }

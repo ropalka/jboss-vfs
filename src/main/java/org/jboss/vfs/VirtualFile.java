@@ -309,18 +309,13 @@ public final class VirtualFile implements Serializable {
      * @throws IllegalStateException    if the file is closed
      */
     void visit(VirtualFileVisitor visitor) throws IOException {
-        visit(visitor, true);
-    }
-
-    private void visit(VirtualFileVisitor visitor, boolean root) throws IOException {
         final VisitorAttributes visitorAttributes = visitor.getAttributes();
-        if (root && visitorAttributes.isIncludeRoot()) { visitor.visit(this); }
         // isDirectory does the read security check
         if (!isDirectory()) { return; }
         for (VirtualFile child : getChildren()) {
             // Always visit a leaf, and visit directories when leaves only is false
             if (!child.isDirectory() || !visitorAttributes.isLeavesOnly()) { visitor.visit(child); }
-            if (child.isDirectory() && visitorAttributes.isRecurse(child)) { child.visit(visitor, false); }
+            if (child.isDirectory() && visitorAttributes.isRecurse(child)) { child.visit(visitor); }
         }
     }
 
