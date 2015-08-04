@@ -128,7 +128,7 @@ public final class TempFileProvider implements Closeable {
      * @return the temp directory
      * @throws IOException for any error
      */
-    public TempDir createTempDir(String originalName) throws IOException {
+    TempDir createTempDir(String originalName) throws IOException {
         if (!open.get()) {
             throw VFSMessages.MESSAGES.tempFileProviderClosed();
         }

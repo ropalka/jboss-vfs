@@ -198,7 +198,7 @@ public final class VirtualFile implements Serializable {
      *
      * @return {@code true} if file was deleted
      */
-    public boolean delete() {
+    boolean delete() {
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().delete(mount.getMountPoint(), this);
     }
