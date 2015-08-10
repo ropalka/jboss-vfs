@@ -32,11 +32,11 @@ interface VFSMessages {
     //    @Message(id = 13, value = "Failed to clean existing content for temp file provider of type %s")
     //    IOException failedToCleanExistingContentForTempFileProvider(String providerType);
 
-    @Message(id = 14, value = "Could not create directory for root '%s' (prefix '%s', suffix '%s') after %d attempts")
-    IOException couldNotCreateDirectoryForRoot(File root, String prefix, String suffix, int retries);
+    @Message(id = 14, value = "Could not create directory for root '%s' (prefix '%s')")
+    IOException couldNotCreateDirectoryForRoot(File root, String prefix);
 
-    @Message(id = 15, value = "Could not create directory for original name '%s' after %d attempts")
-    IOException couldNotCreateDirectory(String originalName, int retries);
+    @Message(id = 15, value = "Could not create directory for original name '%s'")
+    IOException couldNotCreateDirectory(String originalName);
 
     @Message(id = 16, value = "Root filesystem already mounted")
     IOException rootFileSystemAlreadyMounted();
