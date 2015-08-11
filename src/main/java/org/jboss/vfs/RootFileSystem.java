@@ -121,13 +121,6 @@ final class RootFileSystem implements FileSystem {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    public File getMountSource() {
-        return null;
-    }
-
     public URI getRootURI() throws URISyntaxException {
         return null;
     }

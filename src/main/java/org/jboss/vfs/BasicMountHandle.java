@@ -18,7 +18,6 @@
 package org.jboss.vfs;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -28,7 +27,7 @@ import java.io.IOException;
  *
  * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  */
-class BasicMountHandle implements MountHandle {
+class BasicMountHandle implements Closeable {
     private final FileSystem fileSystem;
     private final Closeable mountHandle;
     private final Closeable[] closeables;
@@ -40,15 +39,10 @@ class BasicMountHandle implements MountHandle {
      * @param mountHandle          the handle to close the actual mount
      * @param additionalCloseables addition Closeable to execute on close
      */
-    public BasicMountHandle(final FileSystem fileSystem, Closeable mountHandle, Closeable... additionalCloseables) {
+    BasicMountHandle(final FileSystem fileSystem, Closeable mountHandle, Closeable... additionalCloseables) {
         this.fileSystem = fileSystem;
         this.mountHandle = mountHandle;
         this.closeables = additionalCloseables;
-    }
-
-    /* {@inheritDoc} */
-    public File getMountSource() {
-        return fileSystem.getMountSource();
     }
 
     /* {@inheritDoc} */

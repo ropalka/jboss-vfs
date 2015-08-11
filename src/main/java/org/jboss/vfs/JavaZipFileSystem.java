@@ -300,10 +300,6 @@ final class JavaZipFileSystem implements FileSystem {
     /**
      * {@inheritDoc}
      */
-    public File getMountSource() {
-        return archiveFile;
-    }
-
     public URI getRootURI() throws URISyntaxException {
         return new URI("jar", archiveFile.toURI().toString() + "!/", null);
     }

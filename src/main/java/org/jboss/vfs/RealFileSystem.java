@@ -222,13 +222,6 @@ final class RealFileSystem implements FileSystem {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public File getMountSource() {
-        return realRoot;
-    }
-
     public URI getRootURI() throws URISyntaxException {
         return realRoot.toURI();
     }

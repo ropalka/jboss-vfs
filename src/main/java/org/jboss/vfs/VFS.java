@@ -234,7 +234,7 @@ public class VFS {
         return new HashSet<String>(mountMap.keySet());
     }
 
-    private static MountHandle doMount(final FileSystem fileSystem, final VirtualFile mountPoint, Closeable... additionalCloseables) throws IOException {
+    private static Closeable doMount(final FileSystem fileSystem, final VirtualFile mountPoint, Closeable... additionalCloseables) throws IOException {
         boolean ok = false;
         try {
             final Closeable mountHandle = mount(mountPoint, fileSystem);
@@ -261,7 +261,7 @@ public class VFS {
         boolean ok = false;
         final TempDir tempDir = tempFileProvider.createTempDir(zipFile.getName());
         try {
-            final MountHandle handle = doMount(new JavaZipFileSystem(zipFile, tempDir), mountPoint);
+            final Closeable handle = doMount(new JavaZipFileSystem(zipFile, tempDir), mountPoint);
             ok = true;
             return handle;
         } finally {
@@ -287,7 +287,7 @@ public class VFS {
         try {
             final TempDir tempDir = tempFileProvider.createTempDir(zipName);
             try {
-                final MountHandle handle = doMount(new JavaZipFileSystem(zipName, zipData, tempDir), mountPoint);
+                final Closeable handle = doMount(new JavaZipFileSystem(zipName, zipData, tempDir), mountPoint);
                 ok = true;
                 return handle;
             } finally {
@@ -340,7 +340,7 @@ public class VFS {
         boolean ok = false;
         final TempDir tempDir = tempFileProvider.createTempDir("tmpfs");
         try {
-            final MountHandle handle = doMount(new RealFileSystem(tempDir.getRoot()), mountPoint, tempDir);
+            final Closeable handle = doMount(new RealFileSystem(tempDir.getRoot()), mountPoint, tempDir);
             ok = true;
             return handle;
         } finally {
@@ -366,7 +366,7 @@ public class VFS {
         try {
             final File rootFile = tempDir.getRoot();
             VFSUtils.unzip(zipFile, rootFile);
-            final MountHandle handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
+            final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
             ok = true;
             return handle;
         } finally {
@@ -406,7 +406,7 @@ public class VFS {
                     }
                     final File rootFile = tempDir.getRoot();
                     VFSUtils.unzip(zipFile, rootFile);
-                    final MountHandle handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
+                    final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
                     ok = true;
                     return handle;
                 } finally {

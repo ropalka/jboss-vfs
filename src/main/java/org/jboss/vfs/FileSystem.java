@@ -153,13 +153,6 @@ interface FileSystem extends Closeable {
     void close() throws IOException;
 
     /**
-     * Get the {@link java.io.File} source provided at mount time.
-     *
-     * @return the source used for mounting
-     */
-    File getMountSource();
-
-    /**
      * Get the root URI for this file system, or {@code null} if there is no valid root URI.
      *
      * @return the root URI
