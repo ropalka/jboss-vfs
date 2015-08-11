@@ -280,7 +280,7 @@ public class VFS {
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
+    static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         boolean ok = false;
         try {
             final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipName);
@@ -381,7 +381,7 @@ public class VFS {
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
+    static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         try {
             boolean ok = false;
             final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipName);
