@@ -1,7 +1,5 @@
 package org.jboss.vfs;
 
-
-import java.io.File;
 import java.io.IOException;
 
 import org.jboss.logging.Messages;
@@ -25,15 +23,9 @@ interface VFSMessages {
     @Message(id = 11, value = "Temp directory closed")
     IOException tempDirectoryClosed();
 
-    @Message(id = 12, value = "Temp file provider closed")
-    IOException tempFileProviderClosed();
-
     //  Retired
     //    @Message(id = 13, value = "Failed to clean existing content for temp file provider of type %s")
     //    IOException failedToCleanExistingContentForTempFileProvider(String providerType);
-
-    @Message(id = 14, value = "Could not create directory for root '%s' (prefix '%s')")
-    IOException couldNotCreateDirectoryForRoot(File root, String prefix);
 
     @Message(id = 15, value = "Could not create directory for original name '%s'")
     IOException couldNotCreateDirectory(String originalName);

@@ -44,8 +44,6 @@ import org.junit.Test;
  */
 public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
 
-    private TempFileProvider provider;
-
     private VirtualFile testdir;
 
     public VirtualJarInputStreamTestCase(String name) {
@@ -55,14 +53,13 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        provider = TempFileProvider.create("test");
         testdir = getVirtualFile("/vfs/test");
     }
 
     @Test
     public void testIteration() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             JarEntry next = null;
@@ -105,7 +102,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Test
     public void testRead() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             JarEntry next = jarInput.getNextJarEntry();
@@ -153,7 +150,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Test
     public void testReadClosed() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             JarEntry next = jarInput.getNextJarEntry();
@@ -173,7 +170,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Test
     public void testGetManifest() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             Manifest actual = jarInput.getManifest();
@@ -217,7 +214,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Test
     public void testGetAttributes() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             Manifest manifest = jarInput.getManifest();
@@ -262,7 +259,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Test
     public void testReadCallWithNoEntry() throws Exception {
         VirtualFile jar = testdir.getChild("jar1.jar");
-        Closeable mount = VFS.mountZip(jar, jar, provider);
+        Closeable mount = VFS.mountZip(jar, jar);
         try {
             JarInputStream jarInput = (JarInputStream) jar.openStream();
             assertEquals(-1, jarInput.read());

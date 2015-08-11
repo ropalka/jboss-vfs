@@ -253,13 +253,12 @@ public class VFS {
      *
      * @param zipFile          the zip file to mount
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZip(File zipFile, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
+    public static Closeable mountZip(File zipFile, VirtualFile mountPoint) throws IOException {
         boolean ok = false;
-        final TempDir tempDir = tempFileProvider.createTempDir(zipFile.getName());
+        final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
         try {
             final Closeable handle = doMount(new JavaZipFileSystem(zipFile, tempDir), mountPoint);
             ok = true;
@@ -278,14 +277,13 @@ public class VFS {
      * @param zipData          an input stream containing the zip data
      * @param zipName          the name of the archive
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
+    public static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         boolean ok = false;
         try {
-            final TempDir tempDir = tempFileProvider.createTempDir(zipName);
+            final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipName);
             try {
                 final Closeable handle = doMount(new JavaZipFileSystem(zipName, zipData, tempDir), mountPoint);
                 ok = true;
@@ -306,12 +304,11 @@ public class VFS {
      *
      * @param zipFile          a zip file in the VFS
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZip(VirtualFile zipFile, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
-        return mountZip(zipFile.openStream(), zipFile.getName(), mountPoint, tempFileProvider);
+    public static Closeable mountZip(VirtualFile zipFile, VirtualFile mountPoint) throws IOException {
+        return mountZip(zipFile.openStream(), zipFile.getName(), mountPoint);
     }
 
     /**
@@ -332,13 +329,12 @@ public class VFS {
      * when closed.
      *
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountTemp(VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
+    public static Closeable mountTemp(VirtualFile mountPoint) throws IOException {
         boolean ok = false;
-        final TempDir tempDir = tempFileProvider.createTempDir("tmpfs");
+        final TempDir tempDir = TempFileProvider.getInstance().createTempDir("tmpfs");
         try {
             final Closeable handle = doMount(new RealFileSystem(tempDir.getRoot()), mountPoint, tempDir);
             ok = true;
@@ -356,13 +352,12 @@ public class VFS {
      *
      * @param zipFile          the zip file to mount
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZipExpanded(File zipFile, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
+    public static Closeable mountZipExpanded(File zipFile, VirtualFile mountPoint) throws IOException {
         boolean ok = false;
-        final TempDir tempDir = tempFileProvider.createTempDir(zipFile.getName());
+        final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
         try {
             final File rootFile = tempDir.getRoot();
             VFSUtils.unzip(zipFile, rootFile);
@@ -383,14 +378,13 @@ public class VFS {
      * @param zipData          an input stream containing the zip data
      * @param zipName          the name of the archive
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
+    public static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         try {
             boolean ok = false;
-            final TempDir tempDir = tempFileProvider.createTempDir(zipName);
+            final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipName);
             try {
                 final File zipFile = File.createTempFile(zipName + "-", ".tmp", tempDir.getRoot());
                 try {
@@ -429,12 +423,11 @@ public class VFS {
      *
      * @param zipFile          a zip file in the VFS
      * @param mountPoint       the point at which the filesystem should be mounted
-     * @param tempFileProvider the temporary file provider
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZipExpanded(VirtualFile zipFile, VirtualFile mountPoint, TempFileProvider tempFileProvider) throws IOException {
-        return mountZipExpanded(zipFile.openStream(), zipFile.getName(), mountPoint, tempFileProvider);
+    public static Closeable mountZipExpanded(VirtualFile zipFile, VirtualFile mountPoint) throws IOException {
+        return mountZipExpanded(zipFile.openStream(), zipFile.getName(), mountPoint);
     }
 
     @SuppressWarnings({"unchecked"})

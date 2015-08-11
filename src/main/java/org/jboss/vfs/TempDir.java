@@ -18,6 +18,8 @@
 
 package org.jboss.vfs;
 
+import org.wildfly.protocol.deployment.IOUtils;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,12 +34,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 final class TempDir implements Closeable {
 
-    private final TempFileProvider provider;
     private final File root;
     private final AtomicBoolean open = new AtomicBoolean(true);
 
-    TempDir(TempFileProvider provider, File root) {
-        this.provider = provider;
+    TempDir(File root) {
         this.root = root;
     }
 
@@ -106,7 +106,7 @@ final class TempDir implements Closeable {
      */
     public void close() throws IOException {
         if (open.getAndSet(false)) {
-            provider.delete(root);
+            IOUtils.delete(root);
         }
     }
 

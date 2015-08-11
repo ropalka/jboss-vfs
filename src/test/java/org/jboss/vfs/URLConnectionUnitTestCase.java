@@ -167,11 +167,9 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         VirtualFile vf = VFS.getChild(url.toURI());
         assertTrue(vf.isFile());
         // Mount a temp dir over the jar location in VFS
-        TempFileProvider provider = null;
         Closeable handle = null;
         try {
-            provider = TempFileProvider.create("temp");
-            handle = VFS.mountTemp(vf, provider);
+            handle = VFS.mountTemp(vf);
             assertTrue(vf.isDirectory());
 
             File vfsDerivedFile = vf.getPhysicalFile();
@@ -180,7 +178,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
             assertTrue(urlDerivedFile.isFile());
             assertFalse(vfsDerivedFile.equals(urlDerivedFile));
         } finally {
-            safeClose(handle, provider);
+            safeClose(handle);
         }
     }
 
