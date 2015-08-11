@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -56,7 +55,7 @@ public class VirtualJarInputStreamTestCase extends AbstractVFSTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        provider = TempFileProvider.create("test", new ScheduledThreadPoolExecutor(2));
+        provider = TempFileProvider.create("test");
         testdir = getVirtualFile("/vfs/test");
     }
 

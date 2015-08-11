@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.jboss.test.BaseTestCase;
 import org.junit.internal.ArrayComparisonFailure;
@@ -70,7 +69,7 @@ public abstract class AbstractVFSTest extends BaseTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        provider = TempFileProvider.create("test", new ScheduledThreadPoolExecutor(2));
+        provider = TempFileProvider.create("test");
     }
 
     protected void tearDown() throws Exception {

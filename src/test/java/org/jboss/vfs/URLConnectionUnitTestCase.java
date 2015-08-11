@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 import junit.framework.Test;
 
@@ -171,7 +170,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         TempFileProvider provider = null;
         Closeable handle = null;
         try {
-            provider = TempFileProvider.create("temp", Executors.newSingleThreadScheduledExecutor());
+            provider = TempFileProvider.create("temp");
             handle = VFS.mountTemp(vf, provider);
             assertTrue(vf.isDirectory());
 

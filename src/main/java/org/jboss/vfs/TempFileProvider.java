@@ -22,8 +22,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -38,6 +36,7 @@ public final class TempFileProvider implements Closeable {
     private static final String JVM_TMP_DIR_PROPERTY = "java.io.tmpdir";
     private static final File TMP_ROOT;
     private final AtomicBoolean open = new AtomicBoolean(true);
+    private final File providerRoot;
 
     static {
         String configTmpDir = System.getProperty(JBOSS_TMP_DIR_PROPERTY);
@@ -53,25 +52,17 @@ public final class TempFileProvider implements Closeable {
     /**
      * Create a temporary file provider for a given type.
      * @param providerType the provider type string (used as a prefix in the temp file dir name)
-     * @param executor     the executor
      * @return the new provider
      * @throws IOException if an I/O error occurs
      */
-    public static TempFileProvider create(String providerType, ScheduledExecutorService executor) throws IOException {
+    public static TempFileProvider create(String providerType) throws IOException {
         final File providerRoot = new File(TMP_ROOT, providerType);
-        return new TempFileProvider(createTempDir(providerType, providerRoot), executor);
+        return new TempFileProvider(createTempDir(providerType, providerRoot));
     }
 
-    private final File providerRoot;
-    private final ScheduledExecutorService executor;
 
-    File getProviderRoot() {
-        return providerRoot;
-    }
-
-    private TempFileProvider(File providerRoot, ScheduledExecutorService executor) {
+    private TempFileProvider(File providerRoot) {
         this.providerRoot = providerRoot;
-        this.executor = executor;
     }
 
     /**
@@ -85,7 +76,7 @@ public final class TempFileProvider implements Closeable {
         if (!open.get()) {
             throw VFSMessages.MESSAGES.tempFileProviderClosed();
         }
-        final String name = createTempName(originalName + "-");
+        final String name = createTempName(originalName);
         final File f = new File(providerRoot, name);
         if (f.mkdirs()) {
             return new TempDir(this, f);
@@ -127,28 +118,9 @@ public final class TempFileProvider implements Closeable {
      * @throws IOException
      */
     void delete(final File root) throws IOException {
-        new DeleteTask(root, executor).run();
-    }
-
-    static final class DeleteTask implements Runnable {
-
-        private final File root;
-        private ScheduledExecutorService retryExecutor;
-
-        public DeleteTask(final File root, final ScheduledExecutorService retryExecutor) {
-            this.root = root;
-            this.retryExecutor = retryExecutor;
-        }
-
-        public void run() {
-            if (VFSUtils.recursiveDelete(root) == false) {
-                if (retryExecutor != null) {
-                    VFSLogger.ROOT_LOGGER.tracef("Failed to delete root (%s), retrying in 30sec.", root);
-                    retryExecutor.schedule(this, 30L, TimeUnit.SECONDS);
-                } else {
-                    VFSLogger.ROOT_LOGGER.tracef("Failed to delete root (%s).", root);
-                }
-            }
+        if (!VFSUtils.recursiveDelete(root)) {
+            VFSLogger.ROOT_LOGGER.tracef("Failed to delete root (%s).", root);
+            root.deleteOnExit();
         }
     }
 }
