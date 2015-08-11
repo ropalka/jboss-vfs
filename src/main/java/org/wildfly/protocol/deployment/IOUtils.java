@@ -127,6 +127,25 @@ public final class IOUtils {
     }
 
     /**
+     * Deletes specified file or directory (recursively).
+     * @param file file or directory to be deleted
+     */
+    public static boolean delete(final File file) {
+        if (file == null) return true;
+        if (!file.exists()) return true;
+        if (file.isDirectory()) {
+            for (final File child : file.listFiles()) {
+                if (child.isDirectory()) {
+                    delete(child);
+                } else {
+                    child.delete();
+                }
+            }
+        }
+        return file.delete();
+    }
+
+    /**
      * Safely closes the closeable object. All exceptions will be ignored.
      * @param closeable object that can be closed
      */
