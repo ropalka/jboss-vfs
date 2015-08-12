@@ -41,12 +41,14 @@ public final class IOUtils {
     }
 
     /**
-     * Copies specified source directory recursively to the target directory.
-     * @param sourceDir source directory to be copied from
-     * @param targetDir target directory to be copied to
+     * Extracts specified source directory recursively to the target directory.
+     * Nested .war, .jar, .sar or .rar archives found in given source directory
+     * will be recursively extracted as well.
+     * @param sourceDir source directory to be copied/extracted from
+     * @param targetDir target directory to be copied/extracted to
      * @throws IOException if some I/O error occurs
      */
-    public static void copy(final File sourceDir, final File targetDir) throws IllegalArgumentException, IOException, SecurityException {
+    public static void extract(final File sourceDir, final File targetDir) throws IllegalArgumentException, IOException, SecurityException {
         // preconditions
         if (sourceDir == null) throw new IllegalArgumentException("Source directory cannot be null");
         if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
@@ -61,18 +63,29 @@ public final class IOUtils {
             newFile.getParentFile().mkdirs();
             if (child.isDirectory()) {
                 // copy directory recursively
-                copy(child, newFile);
+                extract(child, newFile);
             } else {
-                // copy file
-                FileInputStream fis = null;
-                FileOutputStream fos = null;
-                try {
-                    fis = new FileInputStream(child);
-                    fos = new FileOutputStream(newFile);
-                    copy(fis, fos);
-                } finally {
-                    safeClose(fis);
-                    safeClose(fos);
+                if (isNestedArchive(child.getName())) {
+                    // extract nested archive
+                    ZipInputStream zis = null;
+                    try {
+                        zis = new ZipInputStream(new FileInputStream(child));
+                        extract(zis, newFile);
+                    } finally {
+                        safeClose(zis);
+                    }
+                } else {
+                    // copy file
+                    FileInputStream fis = null;
+                    FileOutputStream fos = null;
+                    try {
+                        fis = new FileInputStream(child);
+                        fos = new FileOutputStream(newFile);
+                        copy(fis, fos);
+                    } finally {
+                        safeClose(fis);
+                        safeClose(fos);
+                    }
                 }
             }
         }
@@ -80,13 +93,14 @@ public final class IOUtils {
 
     /**
      * Extracts zip stream to the specified target directory.
-     * If there is nested war, jar, sar or rar archive in the given zip archive,
-     * these archives are recursively extracted as well.
+     * Nested .war, .jar, .sar or .rar archives found in given zip archive
+     * will be recursively extracted as well.
+     * This method does not close ZipInputStream object passed as parameter.
      * @param zis zip input stream to be extracted
      * @param targetDir directory where to recursively extract the zip archive
      * @throws IOException if some I/O error occurs
      */
-    public static void copy(final ZipInputStream zis, final File targetDir) throws IOException {
+    public static void extract(final ZipInputStream zis, final File targetDir) throws IOException {
         // preconditions
         if (zis == null) throw new IllegalArgumentException("Zip input stream cannot be null");
         if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
@@ -102,13 +116,13 @@ public final class IOUtils {
             new File(newFile.getParent()).mkdirs();
             // extract zip
             if (!entry.isDirectory()) {
-                if (isNestedArchive(entry)) {
+                if (isNestedArchive(entry.getName())) {
                     // extract nested archive recursively
                     ByteArrayOutputStream baos = null;
                     try {
                         baos = new ByteArrayOutputStream();
                         copy(zis, baos);
-                        copy(new ZipInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
+                        extract(new ZipInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
                     } finally {
                         safeClose(baos);
                     }
@@ -153,9 +167,8 @@ public final class IOUtils {
         if (closeable != null) try { closeable.close(); } catch (final Throwable ignored) {}
     }
 
-    private static boolean isNestedArchive(final ZipEntry entry) {
-        final String entryName = entry.getName();
-        return entryName.endsWith(".jar") || entryName.endsWith(".rar") || entryName.endsWith(".sar") || entryName.endsWith(".war");
+    private static boolean isNestedArchive(final String childName) {
+        return childName.endsWith(".jar") || childName.endsWith(".rar") || childName.endsWith(".sar") || childName.endsWith(".war");
     }
 
     private static void copy(final InputStream is, final OutputStream os) throws IOException {
