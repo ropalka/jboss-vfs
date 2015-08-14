@@ -23,8 +23,6 @@ import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -364,11 +362,7 @@ public class VFS {
         final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
         try {
             final File rootFile = tempDir.getRoot();
-            if (new File("/home/ropalka/vfs.new").exists()) {
-                IOUtils.extract(zipFile, rootFile);
-            } else {
-                VFSUtils.unzip(zipFile, rootFile);
-            }
+            IOUtils.extract(zipFile, rootFile);
             final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
             ok = true;
             return handle;
@@ -383,69 +377,29 @@ public class VFS {
      * Create and mount an expanded zip file in a temporary file system, returning a single handle which will unmount and
      * close the filesystem when closed.  The given zip data stream is closed.
      *
-     * @param zipData          an input stream containing the zip data
-     * @param zipName          the name of the archive
-     * @param mountPoint       the point at which the filesystem should be mounted
-     * @return a handle
-     * @throws IOException if an error occurs
-     */
-    static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
-        try {
-            boolean ok = false;
-            final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipName);
-            try {
-                final File zipFile = File.createTempFile(zipName + "-", ".tmp", tempDir.getRoot());
-                try {
-                    final FileOutputStream os = new FileOutputStream(zipFile);
-                    try {
-                        // allow an error on close to terminate the unzip
-                        VFSUtils.copyStream(zipData, os);
-                        zipData.close();
-                        os.close();
-                    } finally {
-                        VFSUtils.safeClose(zipData);
-                        VFSUtils.safeClose(os);
-                    }
-                    final File rootFile = tempDir.getRoot();
-                    if (new File("/home/ropalka/vfs.new").exists()) {
-                        ZipInputStream zis = null;
-                        try {
-                            zis = new ZipInputStream(new FileInputStream(zipFile));
-                            IOUtils.extract(zis, rootFile);
-                        } finally {
-                            IOUtils.safeClose(zis);
-                        }
-                    } else {
-                        VFSUtils.unzip(zipFile, rootFile);
-                    }
-                    final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
-                    ok = true;
-                    return handle;
-                } finally {
-                    //noinspection ResultOfMethodCallIgnored
-                    zipFile.delete();
-                }
-            } finally {
-                if (!ok) {
-                    VFSUtils.safeClose(tempDir);
-                }
-            }
-        } finally {
-            VFSUtils.safeClose(zipData);
-        }
-    }
-
-    /**
-     * Create and mount an expanded zip file in a temporary file system, returning a single handle which will unmount and
-     * close the filesystem when closed.  The given zip data stream is closed.
-     *
      * @param zipFile          a zip file in the VFS
      * @param mountPoint       the point at which the filesystem should be mounted
      * @return a handle
      * @throws IOException if an error occurs
      */
     public static Closeable mountZipExpanded(VirtualFile zipFile, VirtualFile mountPoint) throws IOException {
-        return mountZipExpanded(zipFile.openStream(), zipFile.getName(), mountPoint);
+        ZipInputStream zis = null;
+        TempDir tempDir = null;
+        boolean ok = false;
+        try {
+            tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
+            final File rootFile = tempDir.getRoot();
+            zis = new ZipInputStream(zipFile.openStream());
+            IOUtils.extract(zis, rootFile);
+            final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
+            ok = true;
+            return handle;
+        } finally {
+            VFSUtils.safeClose(zis);
+            if (!ok) {
+                VFSUtils.safeClose(tempDir);
+            }
+        }
     }
 
     @SuppressWarnings({"unchecked"})
