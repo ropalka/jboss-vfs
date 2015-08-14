@@ -17,13 +17,16 @@
 */
 package org.jboss.vfs;
 
+import org.wildfly.protocol.deployment.IOUtils;
+
 import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -36,6 +39,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipInputStream;
 
 /**
  * Virtual File System
@@ -360,7 +364,11 @@ public class VFS {
         final TempDir tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
         try {
             final File rootFile = tempDir.getRoot();
-            VFSUtils.unzip(zipFile, rootFile);
+            if (new File("/home/ropalka/vfs.new").exists()) {
+                IOUtils.extract(zipFile, rootFile);
+            } else {
+                VFSUtils.unzip(zipFile, rootFile);
+            }
             final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
             ok = true;
             return handle;
@@ -399,7 +407,17 @@ public class VFS {
                         VFSUtils.safeClose(os);
                     }
                     final File rootFile = tempDir.getRoot();
-                    VFSUtils.unzip(zipFile, rootFile);
+                    if (new File("/home/ropalka/vfs.new").exists()) {
+                        ZipInputStream zis = null;
+                        try {
+                            zis = new ZipInputStream(new FileInputStream(zipFile));
+                            IOUtils.extract(zis, rootFile);
+                        } finally {
+                            IOUtils.safeClose(zis);
+                        }
+                    } else {
+                        VFSUtils.unzip(zipFile, rootFile);
+                    }
                     final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
                     ok = true;
                     return handle;

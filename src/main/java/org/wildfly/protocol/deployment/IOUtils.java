@@ -54,6 +54,7 @@ public final class IOUtils {
         if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
         if (!sourceDir.exists()) throw new IllegalArgumentException("Source directory '" + sourceDir.getAbsolutePath() + "' does not exist");
         if (sourceDir.isFile()) throw new IllegalArgumentException("Source '" + sourceDir.getAbsolutePath() + "' is not directory");
+        if (!targetDir.exists() && !targetDir.mkdirs()) throw new IllegalArgumentException("Could not create target directory '" + targetDir.getAbsolutePath() + "'");
         if (targetDir.exists() && !targetDir.isDirectory()) throw new IllegalArgumentException("Target '" + targetDir.getAbsolutePath() + "' is not directory");
         if (targetDir.exists() && !targetDir.canWrite()) throw new IllegalArgumentException("Target directory '" + targetDir.getAbsolutePath() + "' must be writable");
 
@@ -104,6 +105,7 @@ public final class IOUtils {
         // preconditions
         if (zis == null) throw new IllegalArgumentException("Zip input stream cannot be null");
         if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
+        if (!targetDir.exists() && !targetDir.mkdirs()) throw new IllegalArgumentException("Could not create target directory '" + targetDir.getAbsolutePath() + "'");
         if (targetDir.exists() && !targetDir.isDirectory()) throw new IllegalArgumentException("Target '" + targetDir.getAbsolutePath() + "' is not directory");
         if (targetDir.exists() && !targetDir.canWrite()) throw new IllegalArgumentException("Target directory '" + targetDir.getAbsolutePath() + "' must be writable");
 
