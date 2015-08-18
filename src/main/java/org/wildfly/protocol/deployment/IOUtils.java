@@ -170,7 +170,7 @@ public final class IOUtils {
     }
 
     private static boolean isNestedArchive(final String childName) {
-        return childName.endsWith(".jar") || childName.endsWith(".rar") || childName.endsWith(".sar") || childName.endsWith(".war");
+        return childName.endsWith(".rar") || childName.endsWith(".sar") || childName.endsWith(".wab") || childName.endsWith(".war");
     }
 
     private static void copy(final InputStream is, final OutputStream os) throws IOException {
