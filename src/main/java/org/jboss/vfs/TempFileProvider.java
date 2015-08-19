@@ -60,7 +60,7 @@ final class TempFileProvider {
         if (f.exists() || f.mkdirs()) {
             return new TempDir(f);
         }
-        throw VFSMessages.MESSAGES.couldNotCreateDirectory(f.getName());
+        throw VFSMessages.MESSAGES.couldNotCreateDirectory(f.getAbsolutePath());
     }
 
     static String createTempName(final String prefix) {

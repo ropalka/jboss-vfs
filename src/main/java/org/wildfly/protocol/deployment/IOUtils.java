@@ -26,8 +26,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
 /**
  * I/O utilities.
@@ -38,6 +39,7 @@ public final class IOUtils {
 
     private static final String CURRENT_PATH = ".";
     private static final String REVERSE_PATH = "..";
+    private static final String MANIFEST_PATH = "META-INF/MANIFEST.MF";
 
     private IOUtils() {
         // forbidden instantiation
@@ -62,12 +64,12 @@ public final class IOUtils {
         if (source.isDirectory()) {
             extractDirectory(source, target);
         } else {
-            ZipInputStream zis = null;
+            JarInputStream jis = null;
             try {
-                zis = new ZipInputStream(new FileInputStream(source));
-                extractArchive(zis, target);
+                jis = new JarInputStream(new FileInputStream(source));
+                extractArchive(jis, target);
             } finally {
-                safeClose(zis);
+                safeClose(jis);
             }
         }
     }
@@ -75,7 +77,7 @@ public final class IOUtils {
     static void extractDirectory(final File sourceDir, final File targetDir) throws IllegalArgumentException, IOException, SecurityException {
         File newFile;
         for (final File child : sourceDir.listFiles()) {
-            newFile =  new File(targetDir, child.getName());
+            newFile = new File(targetDir, child.getName());
             newFile.getParentFile().mkdirs();
             if (child.isDirectory()) {
                 // copy directory recursively
@@ -83,12 +85,12 @@ public final class IOUtils {
             } else {
                 if (isNestedArchive(child.getName())) {
                     // extract nested archive
-                    ZipInputStream zis = null;
+                    JarInputStream jis = null;
                     try {
-                        zis = new ZipInputStream(new FileInputStream(child));
-                        extractArchive(zis, newFile);
+                        jis = new JarInputStream(new FileInputStream(child));
+                        extractArchive(jis, newFile);
                     } finally {
-                        safeClose(zis);
+                        safeClose(jis);
                     }
                 } else {
                     // copy file
@@ -107,31 +109,24 @@ public final class IOUtils {
         }
     }
 
-    static void extractArchive(final ZipInputStream zis, final File targetDir) throws IOException {
-        // preconditions
-        if (zis == null) throw new IllegalArgumentException("Zip input stream cannot be null");
-        if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
-        if (!targetDir.exists() && !targetDir.mkdirs()) throw new IllegalArgumentException("Could not create target directory '" + targetDir.getAbsolutePath() + "'");
-        if (targetDir.exists() && !targetDir.isDirectory()) throw new IllegalArgumentException("Target '" + targetDir.getAbsolutePath() + "' is not directory");
-        if (targetDir.exists() && !targetDir.canWrite()) throw new IllegalArgumentException("Target directory '" + targetDir.getAbsolutePath() + "' must be writable");
-
-        ZipEntry entry;
+    static void extractArchive(final JarInputStream jis, final File targetDir) throws IOException {
+        JarEntry entry;
         File newFile;
-        while ((entry = zis.getNextEntry()) != null) {
+        while ((entry = jis.getNextJarEntry()) != null) {
             String fileName = entry.getName();
             if (fileName.equals(CURRENT_PATH) || fileName.equals(REVERSE_PATH)) continue;
             // create directory structure
             newFile = new File(targetDir + File.separator + fileName);
-            new File(newFile.getParent()).mkdirs();
             // extract zip
             if (!entry.isDirectory()) {
+                new File(newFile.getParent()).mkdirs();
                 if (isNestedArchive(entry.getName())) {
                     // extract nested archive recursively
                     ByteArrayOutputStream baos = null;
                     try {
                         baos = new ByteArrayOutputStream();
-                        copy(zis, baos);
-                        extractArchive(new ZipInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
+                        copy(jis, baos);
+                        extractArchive(new JarInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
                     } finally {
                         safeClose(baos);
                     }
@@ -140,11 +135,25 @@ public final class IOUtils {
                     FileOutputStream fos = null;
                     try {
                         fos = new FileOutputStream(newFile);
-                        copy(zis, fos);
+                        copy(jis, fos);
                     } finally {
                         safeClose(fos);
                     }
                 }
+            }
+        }
+        // JarInputStream swallows manifest files - we need to extract them to the file system
+        final Manifest manifest = jis.getManifest();
+        if (manifest != null) {
+            FileOutputStream fos = null;
+            try {
+                final File manifestFile = new File(targetDir, MANIFEST_PATH);
+                manifestFile.getParentFile().mkdirs();
+                manifestFile.createNewFile();
+                fos = new FileOutputStream(manifestFile);
+                manifest.write(fos);
+            } finally {
+                safeClose(fos);
             }
         }
     }
