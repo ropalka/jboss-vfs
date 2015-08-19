@@ -37,7 +37,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.zip.ZipInputStream;
 
 /**
  * Virtual File System
@@ -367,35 +366,6 @@ public class VFS {
             ok = true;
             return handle;
         } finally {
-            if (!ok) {
-                VFSUtils.safeClose(tempDir);
-            }
-        }
-    }
-
-    /**
-     * Create and mount an expanded zip file in a temporary file system, returning a single handle which will unmount and
-     * close the filesystem when closed.  The given zip data stream is closed.
-     *
-     * @param zipFile          a zip file in the VFS
-     * @param mountPoint       the point at which the filesystem should be mounted
-     * @return a handle
-     * @throws IOException if an error occurs
-     */
-    public static Closeable mountZipExpanded(VirtualFile zipFile, VirtualFile mountPoint) throws IOException {
-        ZipInputStream zis = null;
-        TempDir tempDir = null;
-        boolean ok = false;
-        try {
-            tempDir = TempFileProvider.getInstance().createTempDir(zipFile.getName());
-            final File rootFile = tempDir.getRoot();
-            zis = new ZipInputStream(zipFile.openStream());
-            IOUtils.extract(zis, rootFile);
-            final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
-            ok = true;
-            return handle;
-        } finally {
-            VFSUtils.safeClose(zis);
             if (!ok) {
                 VFSUtils.safeClose(tempDir);
             }

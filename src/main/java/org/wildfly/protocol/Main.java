@@ -43,7 +43,7 @@ public final class Main {
 
     public static void main(final String... args) throws Exception {
         testRoot();
-        IOUtils.extract(new ZipInputStream(new FileInputStream(origEarPath)), new File(targetEarPath));
+        IOUtils.extract(new File(origEarPath), new File(targetEarPath));
         IOUtils.extract(new File(targetEarPath), new File(targetEarCopy));
         File manifest = new File(new File(targetEarCopy), "META-INF/MANIFEST.MF");
         System.out.println(manifest.getAbsolutePath() + " exists");

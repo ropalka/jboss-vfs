@@ -36,28 +36,43 @@ import java.util.zip.ZipInputStream;
  */
 public final class IOUtils {
 
+    private static final String CURRENT_PATH = ".";
+    private static final String REVERSE_PATH = "..";
+
     private IOUtils() {
         // forbidden instantiation
     }
 
     /**
-     * Extracts specified source directory recursively to the target directory.
-     * Nested .war, .jar, .sar or .rar archives found in given source directory
-     * will be recursively extracted as well.
-     * @param sourceDir source directory to be copied/extracted from
-     * @param targetDir target directory to be copied/extracted to
+     * Extracts specified source recursively to the target directory.
+     * Nested .jar, .sar, .rar, .war and .wab archives found in given source will be recursively extracted as well.
+     * @param source source file or directory to be copied/extracted from
+     * @param target target directory to be copied/extracted to
      * @throws IOException if some I/O error occurs
      */
-    public static void extract(final File sourceDir, final File targetDir) throws IllegalArgumentException, IOException, SecurityException {
+    public static void extract(final File source, final File target) throws IOException {
         // preconditions
-        if (sourceDir == null) throw new IllegalArgumentException("Source directory cannot be null");
-        if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
-        if (!sourceDir.exists()) throw new IllegalArgumentException("Source directory '" + sourceDir.getAbsolutePath() + "' does not exist");
-        if (sourceDir.isFile()) throw new IllegalArgumentException("Source '" + sourceDir.getAbsolutePath() + "' is not directory");
-        if (!targetDir.exists() && !targetDir.mkdirs()) throw new IllegalArgumentException("Could not create target directory '" + targetDir.getAbsolutePath() + "'");
-        if (targetDir.exists() && !targetDir.isDirectory()) throw new IllegalArgumentException("Target '" + targetDir.getAbsolutePath() + "' is not directory");
-        if (targetDir.exists() && !targetDir.canWrite()) throw new IllegalArgumentException("Target directory '" + targetDir.getAbsolutePath() + "' must be writable");
+        if (source == null) throw new IllegalArgumentException("Source cannot be null");
+        if (target == null) throw new IllegalArgumentException("Target cannot be null");
+        if (!source.exists()) throw new IllegalArgumentException("Source '" + source.getAbsolutePath() + "' does not exist");
+        if (!target.exists() && !target.mkdirs()) throw new IllegalArgumentException("Could not create target directory '" + target.getAbsolutePath() + "'");
+        if (target.exists() && !target.isDirectory()) throw new IllegalArgumentException("Target '" + target.getAbsolutePath() + "' is not directory");
+        if (target.exists() && !target.canWrite()) throw new IllegalArgumentException("Target directory '" + target.getAbsolutePath() + "' must be writable");
 
+        if (source.isDirectory()) {
+            extractDirectory(source, target);
+        } else {
+            ZipInputStream zis = null;
+            try {
+                zis = new ZipInputStream(new FileInputStream(source));
+                extractArchive(zis, target);
+            } finally {
+                safeClose(zis);
+            }
+        }
+    }
+
+    static void extractDirectory(final File sourceDir, final File targetDir) throws IllegalArgumentException, IOException, SecurityException {
         File newFile;
         for (final File child : sourceDir.listFiles()) {
             newFile =  new File(targetDir, child.getName());
@@ -71,7 +86,7 @@ public final class IOUtils {
                     ZipInputStream zis = null;
                     try {
                         zis = new ZipInputStream(new FileInputStream(child));
-                        extract(zis, newFile);
+                        extractArchive(zis, newFile);
                     } finally {
                         safeClose(zis);
                     }
@@ -92,16 +107,7 @@ public final class IOUtils {
         }
     }
 
-    /**
-     * Extracts zip stream to the specified target directory.
-     * Nested .war, .jar, .sar or .rar archives found in given zip archive
-     * will be recursively extracted as well.
-     * This method does not close ZipInputStream object passed as parameter.
-     * @param zis zip input stream to be extracted
-     * @param targetDir directory where to recursively extract the zip archive
-     * @throws IOException if some I/O error occurs
-     */
-    public static void extract(final ZipInputStream zis, final File targetDir) throws IOException {
+    static void extractArchive(final ZipInputStream zis, final File targetDir) throws IOException {
         // preconditions
         if (zis == null) throw new IllegalArgumentException("Zip input stream cannot be null");
         if (targetDir == null) throw new IllegalArgumentException("Target directory cannot be null");
@@ -113,6 +119,7 @@ public final class IOUtils {
         File newFile;
         while ((entry = zis.getNextEntry()) != null) {
             String fileName = entry.getName();
+            if (fileName.equals(CURRENT_PATH) || fileName.equals(REVERSE_PATH)) continue;
             // create directory structure
             newFile = new File(targetDir + File.separator + fileName);
             new File(newFile.getParent()).mkdirs();
@@ -124,7 +131,7 @@ public final class IOUtils {
                     try {
                         baos = new ByteArrayOutputStream();
                         copy(zis, baos);
-                        extract(new ZipInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
+                        extractArchive(new ZipInputStream(new ByteArrayInputStream(baos.toByteArray())), newFile);
                     } finally {
                         safeClose(baos);
                     }
