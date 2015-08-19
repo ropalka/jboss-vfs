@@ -19,11 +19,8 @@ package org.jboss.vfs;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,7 +28,6 @@ import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -697,188 +693,6 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
     }
 
     /**
-     * Test the serialization of VirtualFiles
-     *
-     * @throws Exception
-     */
-    public void testVFSerialization() throws Exception {
-        File tmpRoot = File.createTempFile("vfs", ".root");
-        tmpRoot.delete();
-        tmpRoot.mkdir();
-        tmpRoot.deleteOnExit();
-        File tmp = new File(tmpRoot, "vfs.ser");
-        tmp.createNewFile();
-        tmp.deleteOnExit();
-        log.info("+++ testVFSerialization, tmp=" + tmp.getCanonicalPath());
-        URL rootURL = tmpRoot.toURI().toURL();
-        VirtualFile testdir = VFS.getChild(rootURL.getPath());
-        VirtualFile tmpVF = testdir.getChild("vfs.ser");
-        FileOutputStream fos = new FileOutputStream(tmp);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(tmpVF);
-        oos.close();
-
-        // Check the tmpVF attributes against the tmp file
-        long lastModified = tmp.lastModified();
-        long size = tmp.length();
-        String name = tmp.getName();
-
-        URL url = toVfsUrl(tmp.toURI().toURL());
-        String vfsPath = url.getPath();
-        log.debug("name: " + name);
-        log.debug("vfsPath: " + vfsPath);
-        log.debug("url: " + url);
-        log.debug("lastModified: " + lastModified);
-        log.debug("size: " + size);
-        assertEquals("name", name, tmpVF.getName());
-        assertEquals("pathName", vfsPath, tmpVF.getPathName());
-        assertEquals("lastModified", lastModified, tmpVF.getLastModified());
-        assertEquals("size", size, tmpVF.getSize());
-        assertEquals("url", url, tmpVF.toURL());
-        assertTrue("isFile", tmpVF.isFile());
-        assertFalse("isDirectory", tmpVF.isDirectory());
-        //assertEquals("isHidden", false, tmpVF.isHidden());
-
-        // Read in the VF from the serialized file
-        FileInputStream fis = new FileInputStream(tmp);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        VirtualFile tmpVF2 = (VirtualFile) ois.readObject();
-        ois.close();
-        // Validated the deserialized attribtes against the tmp file
-        assertEquals("name", name, tmpVF2.getName());
-        assertEquals("pathName", vfsPath, tmpVF2.getPathName());
-        assertEquals("lastModified", lastModified, tmpVF2.getLastModified());
-        assertEquals("size", size, tmpVF2.getSize());
-        assertEquals("url", url, tmpVF2.toURL());
-        assertTrue("isFile", tmpVF2.isFile());
-        assertFalse("isDirectory", tmpVF2.isDirectory());
-        //assertEquals("isHidden", false, tmpVF2.isHidden());
-    }
-
-    /**
-     * Test the serialization of VirtualFiles representing a jar
-     *
-     * @throws Exception
-     */
-    public void testVFJarSerialization() throws Exception {
-        File tmpRoot = File.createTempFile("vfs", ".root");
-        tmpRoot.delete();
-        tmpRoot.mkdir();
-        tmpRoot.deleteOnExit();
-        // Create a test jar containing a txt file
-        File tmpJar = new File(tmpRoot, "tst.jar");
-        tmpJar.createNewFile();
-        tmpJar.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(tmpJar);
-        JarOutputStream jos = new JarOutputStream(fos);
-        // Write a text file to include in a test jar
-        JarEntry txtEntry = new JarEntry("tst.txt");
-        jos.putNextEntry(txtEntry);
-        txtEntry.setSize("testVFJarSerialization".length());
-        txtEntry.setTime(System.currentTimeMillis());
-        jos.write("testVFJarSerialization".getBytes());
-        jos.close();
-        log.info("+++ testVFJarSerialization, tmp=" + tmpJar.getCanonicalPath());
-
-        URI rootURI = tmpRoot.toURI();
-        VirtualFile tmp = VFS.getChild(rootURI.getPath());
-        File vfsSer = new File(tmpRoot, "vfs.ser");
-        vfsSer.createNewFile();
-        vfsSer.deleteOnExit();
-
-        VirtualFile tmpVF = tmp.getChild("tst.jar");
-        // Validate the vf jar against the tmp file attributes
-        long lastModified = tmpJar.lastModified();
-        long size = tmpJar.length();
-        String name = tmpJar.getName();
-        URL url = tmpJar.toURL();
-        String vfsPath = url.getPath();
-        //url = JarUtils.createJarURL(url);
-        log.debug("name: " + name);
-        log.debug("vfsPath: " + vfsPath);
-        log.debug("url: " + url);
-        log.debug("lastModified: " + lastModified);
-        log.debug("size: " + size);
-        assertEquals("name", name, tmpVF.getName());
-        assertEquals("pathName", vfsPath, tmpVF.getPathName());
-        assertEquals("lastModified", lastModified, tmpVF.getLastModified());
-        assertEquals("size", size, tmpVF.getSize());
-        assertEquals("url", url.getPath(), tmpVF.toURL().getPath());
-        assertFalse("isDirectory", tmpVF.isDirectory());
-        assertTrue("isFile", tmpVF.isFile());
-        //assertEquals("isHidden", false, tmpVF.isHidden());
-        // Write out the vfs jar file
-        fos = new FileOutputStream(vfsSer);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(tmpVF);
-        oos.close();
-
-        // Read in the VF from the serialized file
-        FileInputStream fis = new FileInputStream(vfsSer);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        VirtualFile tmpVF2 = (VirtualFile) ois.readObject();
-        ois.close();
-        // Validate the vf jar against the tmp file attributes
-        assertEquals("name", name, tmpVF2.getName());
-        assertEquals("pathName", vfsPath, tmpVF2.getPathName());
-        assertEquals("lastModified", lastModified, tmpVF2.getLastModified());
-        assertEquals("size", size, tmpVF2.getSize());
-        assertEquals("url", url.getPath(), tmpVF2.toURL().getPath());
-        assertFalse("isDirectory", tmpVF2.isDirectory());
-        assertTrue("isFile", tmpVF2.isFile());
-        //assertEquals("isHidden", false, tmpVF2.isHidden());
-    }
-
-    /**
-     * Test the serialization of VirtualFiles representing a jar
-     *
-     * @throws Exception
-     */
-    public void testVFNestedJarSerialization() throws Exception {
-        // this expects to be run with a working dir of the container root
-        VirtualFile testdir = getVirtualFile("/vfs/test");
-        VirtualFile outer = testdir.getChild("outer.jar");
-        List<Closeable> mounts = recursiveMount(outer);
-        try {
-            VirtualFile inner = outer.getChild("jar1.jar");
-
-            File vfsSer = File.createTempFile("testVFNestedJarSerialization", ".ser");
-            vfsSer.deleteOnExit();
-            // Write out the vfs inner jar file
-            FileOutputStream fos = new FileOutputStream(vfsSer);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(inner);
-            oos.close();
-
-            // Read in the VF from the serialized file
-            FileInputStream fis = new FileInputStream(vfsSer);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            inner = (VirtualFile) ois.readObject();
-            ois.close();
-            List<VirtualFile> contents = inner.getChildren();
-            // META-INF/*, org/jboss/test/vfs/support/jar1/* at least
-            // TODO - fix this once no_copy serialization is working
-            int size = 2;
-            assertTrue("jar1.jar children.length(" + contents.size() + ") is not " + size, contents.size() >= size);
-            for (VirtualFile vf : contents) {
-                log.info("  " + vf.getName());
-            }
-            VirtualFile vf = testdir.getChild("outer.jar/jar1.jar");
-         /*
-               VirtualFile jar1MF = vf.getChild("META-INF/MANIFEST.MF");
-               InputStream mfIS = jar1MF.openStream();
-               Manifest mf = new Manifest(mfIS);
-               Attributes mainAttrs = mf.getMainAttributes();
-               String version = mainAttrs.getValue(Attributes.Name.SPECIFICATION_TITLE);
-               assertEquals(Attributes.Name.SPECIFICATION_TITLE.toString(), "jar1", version);
-               mfIS.close();
-         */
-        } finally {
-            safeClose(mounts);
-        }
-    }
-
-    /**
      * Test that the URL of a VFS corresponding to a directory ends in '/' so that
      * URLs created relative to it are under the directory. This requires that
      * build-test.xml artifacts exist.
@@ -1132,7 +946,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         VirtualFile testdir = VFS.getChild(rootURL.getPath());
         VirtualFile tmpVF = testdir.getChild(tmp.getName());
         assertTrue(tmpVF.getPathName() + ".exists()", tmpVF.exists());
-        assertTrue("tmp.delete()", tmpVF.delete());
+        assertTrue("tmp.delete()", tmpVF.getPhysicalFile().delete());
         assertFalse(tmpVF.getPathName() + ".exists()", tmpVF.exists());
         assertTrue(tmpRoot + ".delete()", tmpRoot.delete());
     }
@@ -1186,7 +1000,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         VirtualFile tmpVF = testdir.getChild(tmpJar.getName());
         assertTrue(tmpVF.getPathName() + ".exists()", tmpVF.exists());
         assertTrue(tmpVF.getPathName() + ".size() > 0", tmpVF.getSize() > 0);
-        assertTrue("tmp.delete()", tmpVF.delete());
+        assertTrue("tmp.delete()", tmpVF.getPhysicalFile().delete());
         assertFalse(tmpVF.getPathName() + ".exists()", tmpVF.exists());
         assertTrue(tmpRoot + ".delete()", tmpRoot.delete());
     }
@@ -1232,7 +1046,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         // existing directory - exists(), delete()
         tmpRoot.mkdir();
         assertTrue(tmpRoot + ".exits()", root.exists());
-        assertTrue(tmpRoot + ".delete()", root.delete());
+        assertTrue(tmpRoot + ".delete()", root.getPhysicalFile().delete());
         tmpRoot.mkdir();
 
         // non-empty directory - delete()
@@ -1241,7 +1055,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         File tmp2 = File.createTempFile("testFileDelete2", ".jar", tmp);
         assertTrue(tmp2.exists());
         VirtualFile tmpDeletable = VFS.getChild(tmp.toURI());
-        assertFalse(tmpRoot + ".delete() == false", tmpDeletable.delete());
+        assertFalse(tmpRoot + ".delete() == false", tmpDeletable.getPhysicalFile().delete());
 
         // children() exist
         List<VirtualFile> children = root.getChildren();
@@ -1251,7 +1065,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         VirtualFile tmpVF = root.getChild(tmp.getName());
         assertTrue(tmp + ".exists()", tmpVF.exists());
         assertTrue(tmp + ".delete()", tmp2.delete());
-        assertTrue(tmp + ".delete()", tmpVF.delete());
+        assertTrue(tmp + ".delete()", tmpVF.getPhysicalFile().delete());
         assertFalse(tmp + ".exists() == false", tmpVF.exists());
 
         // children() don't exist
@@ -1259,7 +1073,7 @@ public class FileVFSUnitTestCase extends AbstractVFSTest {
         assertTrue(tmpRoot + ".getChildren().size() == 0", children.size() == 0);
 
         // directory delete()
-        assertTrue(tmpRoot + ".delete()", root.delete());
+        assertTrue(tmpRoot + ".delete()", root.getPhysicalFile().delete());
     }
 
     private URL toVfsUrl(URL fileUrl) throws Exception {

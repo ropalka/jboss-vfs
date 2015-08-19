@@ -61,24 +61,6 @@ interface FileSystem extends Closeable {
     InputStream openInputStream(VirtualFile mountPoint, VirtualFile target) throws IOException;
 
     /**
-     * Determine whether this filesystem is read-only.  A read-only filesystem prohibits file modification or deletion.
-     * It is not an error to mount a read-write filesystem within a read-only filesystem however (this operation does not
-     * take place within the {@code FileSystem} implementation).
-     *
-     * @return {@code true} if the filesystem is read-only
-     */
-    boolean isReadOnly();
-
-    /**
-     * Attempt to delete a virtual file within this filesystem.
-     *
-     * @param mountPoint the mount point of the filesystem instance (guaranteed to be a parent of {@code target})
-     * @param target     the virtual file to act upon
-     * @return {@code true} if the file was deleted, {@code false} if it failed for any reason
-     */
-    boolean delete(VirtualFile mountPoint, VirtualFile target);
-
-    /**
      * Get the size of a virtual file within this filesystem.
      *
      * @param mountPoint the mount point of the filesystem instance (guaranteed to be a parent of {@code target})
@@ -86,15 +68,6 @@ interface FileSystem extends Closeable {
      * @return the size, in bytes, or 0L if the file does not exist or is a directory
      */
     long getSize(VirtualFile mountPoint, VirtualFile target);
-
-    /**
-     * Get the last modification time of a virtual file within this filesystem.
-     *
-     * @param mountPoint the mount point of the filesystem instance (guaranteed to be a parent of {@code target})
-     * @param target     the virtual file to act upon
-     * @return the modification time in milliseconds, or 0L if the file does not exist or if an error occurs
-     */
-    long getLastModified(VirtualFile mountPoint, VirtualFile target);
 
     /**
      * Ascertain the existance of a virtual file within this filesystem.

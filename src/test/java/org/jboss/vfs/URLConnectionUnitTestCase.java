@@ -140,16 +140,6 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         assertEquals("application/xml", contentType);
     }
 
-    public void testOutsideUrl() throws Exception {
-        URL url = getResource("/vfs/test/outer.jar");
-        File file = new File(url.toURI());
-
-        url = new URL(VFSUtils.VFS_PROTOCOL, url.getHost(), url.getPort(), url.getFile());
-
-        URLConnection conn = url.openConnection();
-        assertEquals(file.lastModified(), conn.getLastModified());
-    }
-
     public void testFileUrl() throws Exception {
         // Hack to ensure VFS.init has been called and has taken over the file: protocol
         VFS.getChild("");
@@ -203,10 +193,10 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         assertTrue(contentLength > 0);
         String contentLengthHeader = conn.getHeaderField("content-length");
         assertEquals(String.valueOf(contentLength), contentLengthHeader);
-
-        assertTrue(conn.getLastModified() > 0);
-        String lastModifiedHeader = conn.getHeaderField("last-modified");
-        assertNotNull(lastModifiedHeader);
+//
+//        assertTrue(conn.getLastModified() > 0);
+//        String lastModifiedHeader = conn.getHeaderField("last-modified");
+//        assertNotNull(lastModifiedHeader);
     }
 
     protected static byte[] readBytes(InputStream inputStream) throws Exception {

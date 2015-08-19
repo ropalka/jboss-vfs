@@ -80,13 +80,6 @@ final class RootFileSystem implements FileSystem {
     /**
      * {@inheritDoc}
      */
-    public long getLastModified(VirtualFile mountPoint, VirtualFile target) {
-        return getFile(mountPoint, target).lastModified();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean exists(VirtualFile mountPoint, VirtualFile target) {
         return getFile(mountPoint, target).exists();
     }

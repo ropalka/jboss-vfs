@@ -206,19 +206,6 @@ final class JavaZipFileSystem implements FileSystem {
     /**
      * {@inheritDoc}
      */
-    public long getLastModified(VirtualFile mountPoint, VirtualFile target) {
-        final ZipNode zipNode = getZipNode(mountPoint, target);
-        if (zipNode == null) {
-            return 0L;
-        }
-        final File cachedFile = zipNode.cachedFile;
-        final JarEntry entry = zipNode.entry;
-        return cachedFile != null ? cachedFile.lastModified() : entry == null ? zipTime : entry.getTime();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean exists(VirtualFile mountPoint, VirtualFile target) {
         final ZipNode zipNode = rootNode.find(mountPoint, target);
         if (zipNode == null) {

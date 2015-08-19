@@ -45,7 +45,7 @@ public class FileVFSCaseSensitiveTestCase {
         VirtualFile tmpVFNotExist = testdir.getChild(tmpVF.getName().toUpperCase());
         assertTrue(tmpVF.getPathName() + ".exists()", tmpVF.exists());
         assertFalse("!" + tmpVFNotExist.getPathName() + ".exists()", tmpVFNotExist.exists());
-        assertTrue("tmp.delete()", tmpVF.delete());
+        assertTrue("tmp.delete()", tmpVF.getPhysicalFile().delete());
         assertFalse(tmpVF.getPathName() + ".exists()", tmpVF.exists());
         assertTrue(tmpRoot + ".delete()", tmpRoot.delete());
     }

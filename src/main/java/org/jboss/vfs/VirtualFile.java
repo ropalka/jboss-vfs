@@ -135,8 +135,7 @@ public final class VirtualFile implements Serializable {
      * @return the last modified time
      */
     public long getLastModified() {
-        final VFS.Mount mount = VFS.getMount(this);
-        return mount.getFileSystem().getLastModified(mount.getMountPoint(), this);
+        return -1;
     }
 
     /**
@@ -191,16 +190,6 @@ public final class VirtualFile implements Serializable {
         }
         final VFS.Mount mount = VFS.getMount(this);
         return mount.getFileSystem().openInputStream(mount.getMountPoint(), this);
-    }
-
-    /**
-     * Delete this virtual file
-     *
-     * @return {@code true} if file was deleted
-     */
-    boolean delete() {
-        final VFS.Mount mount = VFS.getMount(this);
-        return mount.getFileSystem().delete(mount.getMountPoint(), this);
     }
 
     /**

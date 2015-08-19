@@ -53,7 +53,7 @@ class FileURLConnection extends AbstractURLConnection {
     }
 
     public long getLastModified() {
-        return rootFileSystem.getLastModified(mountPoint, file);
+        return -1;
     }
 
     public InputStream getInputStream() throws IOException {

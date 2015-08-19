@@ -156,18 +156,6 @@ final class RealFileSystem implements FileSystem {
     /**
      * {@inheritDoc}
      */
-    public long getLastModified(VirtualFile mountPoint, VirtualFile target) {
-        final File file = getFile(mountPoint, target);
-        return privileged ? doPrivileged(new PrivilegedAction<Long>() {
-            public Long run() {
-                return Long.valueOf(file.lastModified());
-            }
-        }).longValue() : file.lastModified();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean exists(VirtualFile mountPoint, VirtualFile target) {
         final File file = getFile(mountPoint, target);
         return privileged ? doPrivileged(new PrivilegedAction<Boolean>() {
