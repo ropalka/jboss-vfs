@@ -47,13 +47,11 @@ public final class VirtualFile implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private final String name;
-    private final String lcname;
     private final VirtualFile parent;
     private final int hashCode;
 
     VirtualFile(String name, VirtualFile parent) {
         this.name = name;
-        lcname = name.toLowerCase();
         this.parent = parent;
         int result = parent == null ? 1 : parent.hashCode();
         result = 31 * result + name.hashCode();
