@@ -18,17 +18,12 @@
 package org.jboss.vfs;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 
 /**
- * MountHandle implementation.  Provides the default behavior
- * of delegating to the FileSystem to get the mount source as
- * well as cleaning up resources.
- *
  * @author <a href=mailto:jbailey@redhat.com">John Bailey</a>
  */
-class BasicMountHandle implements MountHandle {
+class BasicMountHandle implements Closeable {
     private final FileSystem fileSystem;
     private final Closeable mountHandle;
     private final Closeable[] closeables;
@@ -44,11 +39,6 @@ class BasicMountHandle implements MountHandle {
         this.fileSystem = fileSystem;
         this.mountHandle = mountHandle;
         this.closeables = additionalCloseables;
-    }
-
-    /* {@inheritDoc} */
-    public File getMountSource() {
-        return fileSystem.getMountSource();
     }
 
     /* {@inheritDoc} */
