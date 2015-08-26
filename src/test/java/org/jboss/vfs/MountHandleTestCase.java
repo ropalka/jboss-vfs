@@ -34,7 +34,7 @@ public class MountHandleTestCase extends AbstractVFSTest {
     public void testZipGetMountSource() throws Exception {
         VirtualFile jar = getVirtualFile("/vfs/test/jar1.jar");
         File origin = jar.getPhysicalFile();
-        Closeable mountHandle = VFS.mountZip(jar, jar, provider);
+        Closeable mountHandle = VFS.mountZip(jar, jar);
         try {
             File mounted = jar.getPhysicalFile();
             File source = getMountSource(mountHandle);

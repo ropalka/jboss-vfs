@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 import junit.framework.Test;
 
@@ -168,11 +167,9 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
         VirtualFile vf = VFS.getChild(url.toURI());
         assertTrue(vf.isFile());
         // Mount a temp dir over the jar location in VFS
-        TempFileProvider provider = null;
         Closeable handle = null;
         try {
-            provider = TempFileProvider.create("temp", Executors.newSingleThreadScheduledExecutor());
-            handle = VFS.mountTemp(vf, provider);
+            handle = VFS.mountTemp(vf);
             assertTrue(vf.isDirectory());
 
             File vfsDerivedFile = vf.getPhysicalFile();
@@ -181,7 +178,7 @@ public class URLConnectionUnitTestCase extends AbstractVFSTest {
             assertTrue(urlDerivedFile.isFile());
             assertFalse(vfsDerivedFile.equals(urlDerivedFile));
         } finally {
-            safeClose(handle, provider);
+            safeClose(handle);
         }
     }
 

@@ -22,6 +22,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,53 +32,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class TempFileProvider implements Closeable {
+final class TempFileProvider implements Closeable {
 
     private static final String JBOSS_TMP_DIR_PROPERTY = "jboss.server.temp.dir";
     private static final String JVM_TMP_DIR_PROPERTY = "java.io.tmpdir";
+    private static final String PROVIDER_TYPE = "vfs";
     private static final File TMP_ROOT;
     private static final int RETRIES = 10;
+    private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private static final Random rng = new Random();
     private final AtomicBoolean open = new AtomicBoolean(true);
+    private final File providerRoot;
+    static final TempFileProvider INSTANCE;
 
     static {
         String configTmpDir = System.getProperty(JBOSS_TMP_DIR_PROPERTY);
         if (configTmpDir == null) { configTmpDir = System.getProperty(JVM_TMP_DIR_PROPERTY); }
         try {
-            TMP_ROOT = new File(configTmpDir, "vfs");
+            TMP_ROOT = new File(configTmpDir);
             TMP_ROOT.mkdirs();
-        } catch (Exception e) {
-            throw VFSMessages.MESSAGES.cantSetupTempFileProvider(e);
-        }
-    }
-
-    /**
-     * Create a temporary file provider for a given type.
-     * <p/>
-     * This is the same as calling {@link #create(String, java.util.concurrent.ScheduledExecutorService, boolean) create(final String providerType, final ScheduledExecutorService executor, false)}
-     *
-     * @param providerType the provider type string (used as a prefix in the temp file dir name)
-     * @param executor     the executor
-     * @return the new provider
-     * @throws IOException if an I/O error occurs
-     */
-    public static TempFileProvider create(String providerType, ScheduledExecutorService executor) throws IOException {
-        return create(providerType, executor, false);
-    }
-
-    /**
-     * Create a temporary file provider for a given type.
-     *
-     * @param providerType The provider type string (used as a prefix in the temp file dir name)
-     * @param executor Executor which will be used to manage temp file provider tasks (like cleaning up/deleting the temp files when needed)
-     * @param cleanExisting If this is true, then this method will *try* to delete the existing temp content (if any) for the <code>providerType</code>. The attempt to delete the existing content (if any)
-     *                      will be done in the background and this method will not wait for the deletion to complete. The method will immediately return back with a usable {@link TempFileProvider}. Note that the
-     *                      <code>cleanExisting</code> will just act as a hint for this method to trigger the deletion of existing content. The method may not always be able to delete the existing contents.
-     * @return The new provider
-     * @throws IOException if an I/O error occurs
-     */
-    public static TempFileProvider create(final String providerType, final ScheduledExecutorService executor, final boolean cleanExisting) throws IOException {
-        if (cleanExisting) {
             try {
                 // The "clean existing" logic is as follows:
                 // 1) Rename the root directory "foo" corresponding to the provider type to "bar"
@@ -85,10 +60,10 @@ public final class TempFileProvider implements Closeable {
                 // 3) Create a "foo" root directory for the provider type and return that TempFileProvider (while at the same time the background task is in progress)
                 // This ensures that the "foo" root directory for the providerType is empty and the older content is being cleaned up in the background (without affecting the current processing),
                 // thus simulating a "cleanup existing content"
-                final File possiblyExistingProviderRoot = new File(TMP_ROOT, providerType);
+                final File possiblyExistingProviderRoot = new File(TMP_ROOT, PROVIDER_TYPE);
                 if (possiblyExistingProviderRoot.exists()) {
                     // rename it so that it can be deleted as a separate (background) task
-                    final File toBeDeletedProviderRoot = new File(TMP_ROOT, createTempName(providerType + "-to-be-deleted-", ""));
+                    final File toBeDeletedProviderRoot = new File(TMP_ROOT, createTempName(PROVIDER_TYPE + "-to-be-deleted-", ""));
                     final boolean renamed = possiblyExistingProviderRoot.renameTo(toBeDeletedProviderRoot);
                     if (!renamed) {
                         throw new IOException("Failed to rename " + possiblyExistingProviderRoot.getAbsolutePath() + " to " + toBeDeletedProviderRoot.getAbsolutePath());
@@ -99,26 +74,20 @@ public final class TempFileProvider implements Closeable {
                 }
             } catch (Throwable t) {
                 // just log a message if existing contents couldn't be deleted
-                VFSLogger.ROOT_LOGGER.failedToCleanExistingContentForTempFileProvider(providerType);
+                VFSLogger.ROOT_LOGGER.failedToCleanExistingContentForTempFileProvider(PROVIDER_TYPE);
                 // log the cause of the failure
-                VFSLogger.ROOT_LOGGER.debug("Failed to clean existing content for temp file provider of type " + providerType, t);
+                VFSLogger.ROOT_LOGGER.debug("Failed to clean existing content for temp file provider of type " + PROVIDER_TYPE, t);
             }
+            // now create and return the TempFileProvider for the providerType
+            final File providerRoot = new File(TMP_ROOT, PROVIDER_TYPE);
+            INSTANCE = new TempFileProvider(createTempDir("", "", providerRoot));
+        } catch (Exception e) {
+            throw VFSMessages.MESSAGES.cantSetupTempFileProvider(e);
         }
-        // now create and return the TempFileProvider for the providerType
-        final File providerRoot = new File(TMP_ROOT, providerType);
-        return new TempFileProvider(createTempDir(providerType, "", providerRoot), executor);
     }
 
-    private final File providerRoot;
-    private final ScheduledExecutorService executor;
-
-    File getProviderRoot() {
-        return providerRoot;
-    }
-
-    private TempFileProvider(File providerRoot, ScheduledExecutorService executor) {
+    private TempFileProvider(File providerRoot) {
         this.providerRoot = providerRoot;
-        this.executor = executor;
     }
 
     /**
@@ -128,7 +97,7 @@ public final class TempFileProvider implements Closeable {
      * @return the temp directory
      * @throws IOException for any error
      */
-    public TempDir createTempDir(String originalName) throws IOException {
+    TempDir createTempDir(String originalName) throws IOException {
         if (!open.get()) {
             throw VFSMessages.MESSAGES.tempFileProviderClosed();
         }
@@ -141,8 +110,6 @@ public final class TempFileProvider implements Closeable {
         }
         throw VFSMessages.MESSAGES.couldNotCreateDirectory(originalName,RETRIES);
     }
-
-    private static final Random rng = new Random();
 
     private static File createTempDir(String prefix, String suffix, File root) throws IOException {
         for (int i = 0; i < RETRIES; i++) {

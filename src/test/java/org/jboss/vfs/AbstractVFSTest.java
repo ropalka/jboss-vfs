@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.jboss.test.BaseTestCase;
 import org.junit.internal.ArrayComparisonFailure;
@@ -39,8 +38,6 @@ import org.junit.internal.ArrayComparisonFailure;
  * @version $Revision: 1.1 $
  */
 public abstract class AbstractVFSTest extends BaseTestCase {
-    protected TempFileProvider provider;
-
     static void safeClose(final Closeable... closeables) {
         safeClose(Arrays.asList(closeables));
     }
@@ -67,16 +64,6 @@ public abstract class AbstractVFSTest extends BaseTestCase {
         super(name);
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        provider = TempFileProvider.create("test", new ScheduledThreadPoolExecutor(2));
-    }
-
-    protected void tearDown() throws Exception {
-        provider.close();
-    }
-
     public URL getResource(String name) {
         URL url = super.getResource(name);
         assertNotNull("Resource not found: " + name, url);
@@ -92,7 +79,7 @@ public abstract class AbstractVFSTest extends BaseTestCase {
     public List<Closeable> recursiveMount(VirtualFile file) throws IOException {
         ArrayList<Closeable> mounts = new ArrayList<Closeable>();
 
-        if (!file.isDirectory() && file.getName().matches("^.*\\.([EeWwJj][Aa][Rr]|[Zz][Ii][Pp])$")) { mounts.add(VFS.mountZip(file, file, provider)); }
+        if (!file.isDirectory() && file.getName().matches("^.*\\.([EeWwJj][Aa][Rr]|[Zz][Ii][Pp])$")) { mounts.add(VFS.mountZip(file, file)); }
 
         if (file.isDirectory()) { for (VirtualFile child : file.getChildren()) { mounts.addAll(recursiveMount(child)); } }
 
