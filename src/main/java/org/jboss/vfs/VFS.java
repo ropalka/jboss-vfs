@@ -280,7 +280,7 @@ public class VFS {
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
+    private static Closeable mountZip(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         boolean ok = false;
         try {
             final TempDir tempDir = TempFileProvider.INSTANCE.createTempDir(zipName);
@@ -348,31 +348,6 @@ public class VFS {
 
     /**
      * Create and mount an expanded zip file in a temporary file system, returning a single handle which will unmount and
-     * close the filesystem when closed.
-     *
-     * @param zipFile          the zip file to mount
-     * @param mountPoint       the point at which the filesystem should be mounted
-     * @return a handle
-     * @throws IOException if an error occurs
-     */
-    public static Closeable mountZipExpanded(File zipFile, VirtualFile mountPoint) throws IOException {
-        boolean ok = false;
-        final TempDir tempDir = TempFileProvider.INSTANCE.createTempDir(zipFile.getName());
-        try {
-            final File rootFile = tempDir.getRoot();
-            VFSUtils.unzip(zipFile, rootFile);
-            final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
-            ok = true;
-            return handle;
-        } finally {
-            if (!ok) {
-                VFSUtils.safeClose(tempDir);
-            }
-        }
-    }
-
-    /**
-     * Create and mount an expanded zip file in a temporary file system, returning a single handle which will unmount and
      * close the filesystem when closed.  The given zip data stream is closed.
      *
      * @param zipData          an input stream containing the zip data
@@ -381,7 +356,7 @@ public class VFS {
      * @return a handle
      * @throws IOException if an error occurs
      */
-    public static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
+    private static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
         try {
             boolean ok = false;
             final TempDir tempDir = TempFileProvider.INSTANCE.createTempDir(zipName);
