@@ -21,7 +21,6 @@ import static org.jboss.vfs.VFSMessages.MESSAGES;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -36,6 +35,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipInputStream;
 
 /**
  * Virtual File System
@@ -357,38 +357,22 @@ public class VFS {
      * @throws IOException if an error occurs
      */
     private static Closeable mountZipExpanded(InputStream zipData, String zipName, VirtualFile mountPoint) throws IOException {
+        boolean ok = false;
+        TempDir tempDir = null;
+        ZipInputStream zis = null;
         try {
-            boolean ok = false;
-            final TempDir tempDir = TempFileProvider.INSTANCE.createTempDir(zipName);
-            try {
-                final File zipFile = File.createTempFile(zipName + "-", ".tmp", tempDir.getRoot());
-                try {
-                    final FileOutputStream os = new FileOutputStream(zipFile);
-                    try {
-                        // allow an error on close to terminate the unzip
-                        VFSUtils.copyStream(zipData, os);
-                        zipData.close();
-                        os.close();
-                    } finally {
-                        VFSUtils.safeClose(zipData);
-                        VFSUtils.safeClose(os);
-                    }
-                    final File rootFile = tempDir.getRoot();
-                    VFSUtils.unzip(zipFile, rootFile);
-                    final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
-                    ok = true;
-                    return handle;
-                } finally {
-                    //noinspection ResultOfMethodCallIgnored
-                    zipFile.delete();
-                }
-            } finally {
-                if (!ok) {
-                    VFSUtils.safeClose(tempDir);
-                }
-            }
+            tempDir = TempFileProvider.INSTANCE.createTempDir(zipName);
+            zis = new ZipInputStream(zipData);
+            final File rootFile = tempDir.getRoot();
+            IOUtils.extractArchive(zis, rootFile);
+            final Closeable handle = doMount(new RealFileSystem(rootFile), mountPoint, tempDir);
+            ok = true;
+            return handle;
         } finally {
-            VFSUtils.safeClose(zipData);
+            if (!ok) {
+                VFSUtils.safeClose(tempDir);
+            }
+            VFSUtils.safeClose(zis);
         }
     }
 
